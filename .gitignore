@@ -1,0 +1,17 @@
+node_modules/
+.source/
+.vercel/
+.output/
+.nitro/
+.tanstack/
+dist/
+
+.env
+.env.*
+!.env.example
+
+*.log
+.DS_Store
+.vscode/
+.zed/
+.cursor/
