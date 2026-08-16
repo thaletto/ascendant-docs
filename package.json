@@ -5,6 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev",
+    "sync:skills": "bun run scripts/sync-skills.ts",
     "build": "vite build",
     "start": "vite preview",
     "preview": "vite preview",
