@@ -8,6 +8,26 @@ The `Dasha` namespace calculates planetary Vimshottari periods and sign-based
 Jaimini Chara and Sthira periods. All dasha calculators consume a `Moment` and
 shared `Placements`.
 
+## Public exports
+
+```ts
+export * from "./error.js";
+export * from "./model.js";
+export * as Chara from "./chara/index.js";
+export * as Sthira from "./sthira/index.js";
+export * as Vimshottari from "./vimshottari/index.js";
+export { calculate } from "./vimshottari/calculate.js";
+export { calculateChara } from "./chara/calculate.js";
+export { calculateSthira } from "./sthira/calculate.js";
+export { at } from "./vimshottari/query.js";
+export { atRashi } from "./rashi-query.js";
+```
+
+The root module therefore exports the shared error and model definitions,
+focused `Chara`, `Sthira`, and `Vimshottari` namespaces, and the convenience
+functions `calculate`, `calculateChara`, `calculateSthira`, `at`, and
+`atRashi`.
+
 ```ts
 const vimshottari = yield* Dasha.calculate(moment, placements);
 const current = Dasha.at(vimshottari, moment.date);

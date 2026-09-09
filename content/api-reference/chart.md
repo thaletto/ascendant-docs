@@ -12,8 +12,7 @@ ephemeris service.
 ## Quick start
 
 ```ts
-import { AstroParams, Chart } from "astro-ascendant";
-import * as Swisseph from "astro-ascendant/swisseph";
+import { AstroParams, Chart, Swisseph } from "astro-ascendant";
 import { DateTime, Effect, Layer } from "effect";
 
 const input = Chart.ChartParams.make({
@@ -25,29 +24,15 @@ const input = Chart.ChartParams.make({
   sex: "Male",
 });
 
-const runtimeLayer = Layer.mergeAll(
-  AstroParams.DefaultAstroParams,
-  Swisseph.SwissephLayer,
-);
-
 const program = Chart.generate(input, [9]).pipe(
-  Effect.provide(runtimeLayer),
-  Effect.catchTag("QuitError", () => Effect.void),
+  Effect.provide(runtimeLayer)
 );
 
-BunRuntime.runMain(program);
 ```
 
 ## Functions
 
-### `generate(input, divisions?)`
-
-```ts
-generate(
-  input: ChartParams,
-  divisions?: readonly Division[],
-): Effect.Effect<ChartCalculation, ChartCalculationError | DivisionalMappingError | LocatedMomentValidationError, AstroParams | Ephemeris>
-```
+### `generate(input, divisions)`
 
 `divisions` may contain `1, 2, 3, 4, 7, 9, 10, 12, 16, 20, 24, 27, 30, 40,
 45, 60`. D1 (`division: 1`) is always first. Duplicate requests are removed
@@ -58,7 +43,7 @@ longitude values from `-180` through `180`. The optional `sex` value is
 `"Male"` or `"Female"` and is copied to each projected chart; it has no
 inferred default.
 
-### `project(placements, divisions?, sex?)`
+### `project(placements, divisions, sex?)`
 
 Projects already calculated `Placements` without invoking an ephemeris
 service. It returns a non-empty tuple of `Chart` values beginning with D1.

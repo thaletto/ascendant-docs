@@ -58,4 +58,4 @@ npm install astro-ascendant effect@rc
 ```
 
 The package is ESM-only and includes TypeScript declarations. The Swiss
-Ephemeris adapter is available from the `astro-ascendant/swisseph` subpath.
+The Ephemeris adapter is exported as `Swisseph` from the package root.

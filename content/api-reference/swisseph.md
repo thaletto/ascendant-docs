@@ -4,12 +4,11 @@ description: Swiss Ephemeris integration layer for the TypeScript astrology libr
 ---
 
 
-The `astro-ascendant/swisseph` subpath provides the Node.js/Bun adapter backed
-by `@swisseph/node`.
+The root package exports the `Swisseph` namespace, which provides the
+Node.js/Bun adapter backed by `@swisseph/node`.
 
 ```ts
-import * as Swisseph from "astro-ascendant/swisseph";
-import { AstroParams, Chart } from "astro-ascendant";
+import { AstroParams, Chart, Swisseph } from "astro-ascendant";
 import { BunServices } from "@effect/platform-bun";
 import { Effect, Layer } from "effect";
 
