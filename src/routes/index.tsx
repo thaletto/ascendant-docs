@@ -1,27 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { HomeLayout } from "fumadocs-ui/layouts/home";
-import { PlanetaryAtlasLanding } from "@/components/landing/planetary-atlas";
-import {
-  installCommand,
-  planets,
-  sdkCommand,
-} from "@/components/landing/landing-data";
-import { baseOptions } from "@/lib/layout.shared";
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/")({
-  component: Home,
+export const Route = createFileRoute('/')({
+  beforeLoad: () => {
+    throw redirect({ to: '/docs/$', params: { _splat: '' } });
+  },
 });
-
-const landingProps = {
-  installCommand,
-  sdkCommand,
-  planets,
-};
-
-function Home() {
-  return (
-    <HomeLayout {...baseOptions()}>
-      <PlanetaryAtlasLanding {...landingProps} />
-    </HomeLayout>
-  );
-}
