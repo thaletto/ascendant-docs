@@ -20,7 +20,6 @@ const runtimeLayer = Layer.mergeAll(
 
 const examples = Chart.generate(input, [9]).pipe(
   Effect.provide(runtimeLayer),
-  Effect.catchTag("QuitError", () => Effect.void),
 );
 
 BunRuntime.runMain(examples);
