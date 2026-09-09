@@ -1,98 +1,61 @@
 ---
-title: Getting Started
-description: Install Ascendant for Python or an AI coding agent, then calculate your first chart.
+title: Ascendant documentation
+description: Astrology calculations for charts, dashas, Jaimini, and Ashtakavarga.
 ---
 
-Use Ascendant when you want to calculate Vedic astrology data locally from Python or an AI coding agent. You get structured charts, Vimshottari Dasha periods, yoga results, and Ashtakavarga scores without relying on a hosted API.
 
-## Choose how you want to use Ascendant
+Ascendant is an Effect-first TypeScript library for sidereal Vedic astrology
+calculations. It calculates shared planetary **Placements** for a
+**Located Moment**, then derives cusp-aware charts, dashas, Ashtakavarga, and
+Jaimini results from that same calculation.
 
-### Python package
+## API reference
 
-Choose the package when you want to call Ascendant directly from your application:
+- [Astro parameters](./api-reference/astro-params)
+- [Charts and placements](./api-reference/chart)
+- [Dasha](./api-reference/dasha)
+- [Ephemeris](./api-reference/ephemeris)
+- [Jaimini](./api-reference/jaimini)
+- [Ashtakavarga](./api-reference/sav)
+- [Swiss Ephemeris adapter](./api-reference/swisseph)
+
+The package exports these namespaces from `astro-ascendant`:
+
+```ts
+import {
+  Argala,
+  ArudhaPada,
+  AstroParams,
+  Chart,
+  CharaKarakas,
+  Dasha,
+  Ephemeris,
+  Karakamsha,
+  Provenance,
+  RashiDrishti,
+  SAV,
+  Upapada,
+} from "astro-ascendant";
+```
+
+## Calculation model
+
+1. Create a `Chart.ChartParams` value with a UTC `Moment` and geographic
+   coordinates.
+2. Provide an `AstroParams` layer and an `Ephemeris` layer.
+3. Run `Chart.generate`. D1 is always returned; requested divisions are added
+   in ascending order.
+4. Reuse `calculation.placements` with Dasha, SAV, and Jaimini calculators.
+
+Calculators return `Effect.Effect` values. Use `Effect.runPromise` for a
+promise-based application or compose the effects into a larger Effect
+program.
+
+## Installation
 
 ```bash
-pip install astro-ascendant
+npm install astro-ascendant effect@rc
 ```
 
-### Agent skills
-
-Choose the Skills CLI when you want your coding agent to handle saved birth records, transits, and guided reading workflows:
-
-```bash
-npx skills add thaletto/ascendant-agents
-```
-
-The skill pack includes executable setup and transit flows plus guidance for career, finance, health, education, family, marriage, property, daily transit, and relationship compatibility.
-
-## What system the Ascendant skills use
-
-Ascendant's interpretation skills use a versioned **Parashari–Jaimini** workflow
-named `parashari_raman_jaimini_v3`. The calculator uses the **sidereal zodiac**, with
-**Lahiri ayanamsa** and **Whole Sign houses** as its defaults. A reading begins
-with separate Parashari and named seven-karaka Jaimini natal judgments. The two
-are compared as co-primary evidence before the relevant divisional chart,
-Vimshottari periods, dated transits, and Sarvashtakavarga are considered.
-
-The workflow is deliberately narrower than either complete tradition. It uses
-the declared `jaimini_srao_7_core_v1` method and does not silently switch
-variants or add Chara Dasha or KP rules. The agent reads saved
-artifacts directly, applies developer-owned evidence and factor hierarchies,
-and cites each material conclusion with its artifact pointer and governing
-source or Ascendant methodology rule. Choosing a Krishnamurti ayanamsa in the
-Python configuration changes the sidereal reference point; it does not turn
-the skills into a KP astrology engine.
-
-Learn how these traditions differ in [Learn astrology](/docs/astrology), or
-read the exact [agent workflow](/docs/agents).
-
-## Calculate your first chart
-
-```python
-from ascendant import Ascendant
-
-astro = Ascendant(
-    year=1990,
-    month=1,
-    day=1,
-    hour=12,
-    minute=0,
-    second=0,
-    latitude=28.6139,
-    longitude=77.2090,
-    utc="+5:30",
-)
-
-rasi = astro.get_chart(division=1)
-navamsa = astro.get_chart(division=9)
-current_dasha = astro.get_current_dasha()
-yogas = astro.get_yogas()
-ashtakavarga = astro.get_sav()
-jaimini = astro.get_jaimini()
-```
-
-Provide the complete birth details explicitly. The results are ordinary Python dictionaries and typed structures that you can inspect, validate, store, or cite in a response.
-
-## Choose the result you need
-
-| Method | Result |
-|---|---|
-| `get_chart(division)` | A twelve-house divisional chart |
-| `get_dasha_timeline()` | The full Vimshottari Mahadasha and Antardasha sequence |
-| `get_current_dasha(date=None)` | The Mahadasha and Antardasha active on a date |
-| `get_yogas()` | Structured yoga presence, strength, type, and details |
-| `get_sav()` | Bhinna, Sarva, reduced scores, and Shodhya Pinda |
-| `get_jaimini()` | Seven Chara Karakas, Rashi Drishti, Karakamsha, Arudha Padas, Upapada, and raw Argala |
-
-## Configure the calculation model
-
-Charts use Lahiri ayanamsa and Whole Sign houses by default. You can override
-either value for one instance or set immutable application defaults for future
-instances. See [Configuration](/docs/configuration) for precedence, supported
-values, validation, and reproducible examples.
-
-Continue with [Agent workflows](/docs/agents), [Learn astrology](/docs/astrology),
-or the Python library guides for [charts](/docs/library/charts),
-[dashas](/docs/library/dasha), [yogas](/docs/library/yoga), and
-[Ashtakavarga](/docs/library/ashtakavarga), or
-[Jaimini core](/docs/library/jaimini).
+The package is ESM-only and includes TypeScript declarations. The Swiss
+Ephemeris adapter is available from the `astro-ascendant/swisseph` subpath.
