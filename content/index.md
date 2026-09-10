@@ -11,7 +11,7 @@ with the other calculation modules.
 ## Install
 
 ```bash
-bun install astro-ascendant effect@rc
+bun add astro-ascendant effect@rc
 ```
 
 ## 1. Import the packages

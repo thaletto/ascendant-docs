@@ -28,8 +28,8 @@ export function baseOptions(): BaseLayoutProps {
         <img
           src={wordmark}
           alt="Ascendant"
-          height={40}
-          className="h-10 w-auto dark:invert"
+          height={48}
+          className="h-16 w-auto dark:invert"
         />
       ),
     },

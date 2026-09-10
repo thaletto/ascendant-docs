@@ -20,6 +20,9 @@
 
 :root {
   --paper: oklch(1 0 0);
+  --landing-paper: oklch(0.946 0.025 92);
+  --landing-ink: oklch(0.224 0.022 73);
+  --landing-cream: oklch(0.973 0.018 93);
   --paper-soft: oklch(0.985 0 0);
   --ink: oklch(0.17 0.012 65);
   --ink-soft: oklch(0.39 0.018 65);
@@ -139,6 +142,9 @@ body { background: var(--paper); color: var(--ink); }
 
 @theme inline {
   --color-celestial: var(--celestial);
+  --color-landing-paper: var(--landing-paper);
+  --color-landing-ink: var(--landing-ink);
+  --color-landing-cream: var(--landing-cream);
   --color-celestial-soft: var(--celestial-soft);
   --color-cosmos: var(--cosmos);
   --font-sans: 'IBM Plex Sans Variable', sans-serif;
