@@ -1,5 +1,6 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import { gitConfig } from './shared';
+import wordmark from '../../assets/wordmark.png';
 
 const npmLogo = (
   <svg aria-label="npm" role="img" viewBox="0 0 2500 2500">
@@ -23,7 +24,14 @@ const pypiLogo = (
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: <span className="wordmark">Ascendant</span>,
+      title: (
+        <img
+          src={wordmark}
+          alt="Ascendant"
+          height={40}
+          className="h-10 w-auto dark:invert"
+        />
+      ),
     },
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
     links: [

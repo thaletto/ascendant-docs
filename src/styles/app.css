@@ -223,6 +223,11 @@ body { background: var(--paper); color: var(--ink); }
 
 @layer base {
   * { @apply border-border outline-ring/50; }
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+  }
   body { @apply bg-background text-foreground; }
   html { @apply font-sans; }
 }
