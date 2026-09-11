@@ -1,9 +1,16 @@
 # Ascendant Docs
 
-Ascendant Docs is the human-readable documentation site for Ascendant, a
-Python astrology library and its agent workflows.
+<p align="center">
+  <img src="assets/logo.png" alt="Ascendant" width="360" />
+</p>
 
-It explains how Ascendant calculates and presents Vedic astrology data,
+Ascendant Docs is the human-readable documentation site for Ascendant, a
+sidereal astrology calculation engine and its agent workflows.
+
+The engine ships as `astro-ascendant` on npm (Effect-first TypeScript) and
+PyPI (Python), so this site covers both libraries — not Python alone.
+
+It explains how Ascendant calculates and presents sidereal astrology data,
 including sidereal charts, divisional charts, Vimshottari Dasha periods, yogas,
 Ashtakavarga, and a focused Jaimini analysis.
 
@@ -13,7 +20,7 @@ Ashtakavarga, and a focused Jaimini analysis.
 - The difference between signs, houses, charts, and timing
 - How Parashari, Jaimini, and KP approaches differ
 - How to understand saved person records and agent workflows
-- How to use the Python library and choose calculation settings
+- How to use the TypeScript and Python libraries and choose calculation settings
 - The evidence and safety boundaries for astrology guidance
 
 ## Calculation model
@@ -30,10 +37,9 @@ for medical, legal, or financial advice.
 ## Find your way around
 
 - Start with [Getting Started](content/index.md)
-- Read the [Astrology guide](content/astrology/index.md)
-- Explore [Agent workflows](content/agents.md)
-- Review [Configuration](content/configuration.md)
-- Browse the library guides in `content/library/`
+- Browse the [API reference](content/api-reference/chart.md): [Chart](content/api-reference/chart.md),
+  [Dasha](content/api-reference/dasha.md), [Ashtakavarga](content/api-reference/sav.md),
+  [Jaimini](content/api-reference/jaimini.md)
 - Read the project glossary in `CONTEXT.md`
 
 ## Contributing
