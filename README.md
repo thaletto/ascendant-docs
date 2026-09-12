@@ -1,4 +1,4 @@
-# Ascendant Docs
+<h1 align="center">Ascendant Docs</h1>
 
 <p align="center">
   <img src="assets/logo.png" alt="Ascendant" width="360" />
@@ -8,7 +8,7 @@ Ascendant Docs is the human-readable documentation site for Ascendant, a
 sidereal astrology calculation engine and its agent workflows.
 
 The engine ships as `astro-ascendant` on npm (Effect-first TypeScript) and
-PyPI (Python), so this site covers both libraries — not Python alone.
+PyPI (Python), so this site covers both libraries, not Python alone.
 
 It explains how Ascendant calculates and presents sidereal astrology data,
 including sidereal charts, divisional charts, Vimshottari Dasha periods, yogas,
