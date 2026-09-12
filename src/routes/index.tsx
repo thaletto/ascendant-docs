@@ -46,7 +46,8 @@ function LandingPage() {
           </a>
           <div className="flex items-center gap-6">
             <Link
-              to="/chart"
+              to="/docs/$"
+              params={{ _splat: 'chart' }}
               className="text-[13px] font-semibold tracking-[0.12em] uppercase text-landing-ink/70 transition-transform active:scale-[0.96]"
             >
               Chart calculator
