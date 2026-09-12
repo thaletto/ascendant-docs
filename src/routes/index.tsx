@@ -9,7 +9,7 @@ export const Route = createFileRoute('/')({
   component: LandingPage,
 });
 
-const INSTALL_CMD = 'bun add astro-ascendant effect@rc';
+const INSTALL_CMD = 'npx skills add thaletto/ascendant-agents';
 
 function LandingPage() {
   const [isCopied, setIsCopied] = useState(false);
