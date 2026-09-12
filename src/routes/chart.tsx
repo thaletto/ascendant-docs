@@ -286,7 +286,7 @@ function ChartFormFrame({ children }: { children: ReactNode }) {
           Lahiri ayanamsa and Whole Sign houses.
         </CardDescription>
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="flex flex-col gap-6">{children}</CardContent>
     </Card>
   );
 }
@@ -297,7 +297,7 @@ function ChartDateField() {
     actions: { updateBirth },
   } = useChart();
   return (
-    <div>
+    <div className="flex flex-col gap-1.5">
       <Label htmlFor="chart-date">Birth date</Label>
       <Input
         id="chart-date"
@@ -315,7 +315,7 @@ function ChartTimeField() {
     actions: { updateBirth },
   } = useChart();
   return (
-    <div>
+    <div className="flex flex-col gap-1.5">
       <Label htmlFor="chart-time">Birth time</Label>
       <Input
         id="chart-time"
@@ -354,7 +354,7 @@ function ChartOffsetField() {
   }
   options.sort((a, b) => a - b);
   return (
-    <div>
+    <div className="flex flex-col gap-1.5">
       <Label htmlFor="chart-offset">Timezone offset</Label>
       <Select
         value={String(birth.utcOffsetMinutes)}
@@ -383,7 +383,7 @@ function ChartSexField() {
     actions: { updateBirth },
   } = useChart();
   return (
-    <div>
+    <div className="flex flex-col gap-1.5">
       <Label htmlFor="chart-sex">Sex (optional)</Label>
       <Select
         value={birth.sex ?? "unspecified"}
@@ -415,23 +415,29 @@ function ChartPlaceField() {
     actions: { updateBirth, searchPlace, selectPlace },
   } = useChart();
   return (
-    <div>
-      <Label htmlFor="chart-place">Birth place</Label>
-      <Input
-        id="chart-place"
-        type="text"
-        placeholder="City, Country"
-        value={birth.place}
-        onChange={(event) => updateBirth({ place: event.target.value })}
-      />
-      <Button
-        type="button"
-        variant="secondary"
-        disabled={searching}
-        onClick={searchPlace}
-      >
-        {searching ? "Searching" : "Search place"}
-      </Button>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="chart-place">Birth place</Label>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Input
+            id="chart-place"
+            type="text"
+            placeholder="City, Country"
+            value={birth.place}
+            onChange={(event) => updateBirth({ place: event.target.value })}
+            className="flex-1"
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={searching}
+            onClick={searchPlace}
+            className="shrink-0"
+          >
+            {searching ? "Searching" : "Search place"}
+          </Button>
+        </div>
+      </div>
       {searchError !== "" ? (
         <Alert variant="destructive">
           <AlertTitle>Place search</AlertTitle>
@@ -461,29 +467,31 @@ function ChartPlaceField() {
           </SelectContent>
         </Select>
       ) : null}
-      <div>
-        <Label htmlFor="chart-latitude">Latitude</Label>
-        <Input
-          id="chart-latitude"
-          type="number"
-          step="any"
-          value={Number.isFinite(birth.latitude) ? birth.latitude : ""}
-          onChange={(event) =>
-            updateBirth({ latitude: parseCoordinate(event.target.value) })
-          }
-        />
-      </div>
-      <div>
-        <Label htmlFor="chart-longitude">Longitude</Label>
-        <Input
-          id="chart-longitude"
-          type="number"
-          step="any"
-          value={Number.isFinite(birth.longitude) ? birth.longitude : ""}
-          onChange={(event) =>
-            updateBirth({ longitude: parseCoordinate(event.target.value) })
-          }
-        />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="chart-latitude">Latitude</Label>
+          <Input
+            id="chart-latitude"
+            type="number"
+            step="any"
+            value={Number.isFinite(birth.latitude) ? birth.latitude : ""}
+            onChange={(event) =>
+              updateBirth({ latitude: parseCoordinate(event.target.value) })
+            }
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="chart-longitude">Longitude</Label>
+          <Input
+            id="chart-longitude"
+            type="number"
+            step="any"
+            value={Number.isFinite(birth.longitude) ? birth.longitude : ""}
+            onChange={(event) =>
+              updateBirth({ longitude: parseCoordinate(event.target.value) })
+            }
+          />
+        </div>
       </div>
     </div>
   );
@@ -528,7 +536,7 @@ function ChartCalculating() {
           server.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-3">
         <Skeleton />
         <Skeleton />
         <Skeleton />
@@ -663,7 +671,7 @@ function ChartDivisionCharts() {
           <AccordionTrigger>
             {`D${division.division} placements and cusps`}
           </AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className="flex flex-col gap-4">
             <ChartPlacementTable division={division.division} />
             <Separator />
             <ChartHouseTable division={division.division} />
@@ -687,7 +695,7 @@ function ChartDashaTables() {
     { name: "Sthira", periods: result.dasha.sthira },
   ];
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {systems.map((system) => (
         <Card key={system.name}>
           <CardHeader>
@@ -733,8 +741,8 @@ function ChartJaiminiTables() {
     return null;
   }
   return (
-    <div>
-      <Card>
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle>Chara Karakas</CardTitle>
         </CardHeader>
@@ -957,10 +965,10 @@ function ChartSuccess() {
     return null;
   }
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <ChartSummary />
-      <Tabs defaultValue="divisions">
-        <TabsList>
+      <Tabs defaultValue="divisions" className="flex flex-col gap-4">
+        <TabsList className="max-w-full self-start overflow-x-auto">
           <TabsTrigger value="divisions">Divisions</TabsTrigger>
           <TabsTrigger value="dasha">Dasha</TabsTrigger>
           <TabsTrigger value="jaimini">Jaimini</TabsTrigger>
@@ -980,12 +988,12 @@ function ChartSuccess() {
         </TabsContent>
       </Tabs>
       <Separator />
-      <div>
+      <div className="flex flex-col gap-3 sm:flex-row">
         <ChartSaveMarkdownButton />
         <ChartAskChatGPTButton />
       </div>
       <Card>
-        <CardContent>
+        <CardContent className="pt-6">
           <CardDescription>
             This chart is interpretive guidance, not certainty or a substitute
             for medical, legal, or financial advice. Calculated with Lahiri
@@ -1028,14 +1036,18 @@ const Chart = {
 function ChartPage() {
   return (
     <Chart.Provider>
-      <main>
+      <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 sm:gap-8 sm:px-6 sm:py-10">
         <Chart.FormFrame>
-          <Chart.DateField />
-          <Chart.TimeField />
-          <Chart.OffsetField />
-          <Chart.SexField />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Chart.DateField />
+            <Chart.TimeField />
+            <Chart.OffsetField />
+            <Chart.SexField />
+          </div>
           <Chart.PlaceField />
-          <Chart.CalculateButton />
+          <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center">
+            <Chart.CalculateButton />
+          </div>
         </Chart.FormFrame>
         <Chart.ResultSwitch />
       </main>
