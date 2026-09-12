@@ -46,6 +46,12 @@ function LandingPage() {
           </a>
           <div className="flex items-center gap-6">
             <Link
+              to="/chart"
+              className="text-[13px] font-semibold tracking-[0.12em] uppercase text-landing-ink/70 transition-transform active:scale-[0.96]"
+            >
+              Chart calculator
+            </Link>
+            <Link
               to="/docs/$"
               params={{ _splat: '' }}
               className="rounded-full bg-landing-ink px-5 py-2.5 text-[13px] font-semibold tracking-[0.12em] text-landing-paper uppercase transition-transform active:scale-[0.96]"
