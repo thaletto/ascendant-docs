@@ -207,7 +207,7 @@ export function ChartSexField() {
   const selected = birth.sex ?? "";
   return (
     <fieldset className="m-0 flex flex-col gap-1.5 border-0 p-0">
-      <legend className="text-sm font-medium">Sex</legend>
+      <legend className="text-sm font-medium">Gender</legend>
       <div className="bg-input/50 grid h-9 grid-cols-3 gap-1 rounded-md p-1">
         {SEX_OPTIONS.map((option) => {
           const checked = selected === option.value;
