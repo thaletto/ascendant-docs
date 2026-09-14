@@ -1,130 +1,59 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useState } from 'react';
-import { RiCheckLine, RiFileCopyLine } from '@remixicon/react';
-import { cn } from '@/lib/utils';
-import solarSystem from '../../assets/solar-system.png';
-import wordmark from '../../assets/wordmark.png';
+import { createFileRoute, Link } from "@tanstack/react-router";
+import solarSystem from "../../assets/solar-system.png";
+import wordmark from "../../assets/wordmark.svg";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-const INSTALL_CMD = 'npx skills add thaletto/ascendant-agents';
-
 function LandingPage() {
-  const [isCopied, setIsCopied] = useState(false);
-  const [copyFailed, setCopyFailed] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(INSTALL_CMD);
-      setIsCopied(true);
-      setCopyFailed(false);
-      setTimeout(() => setIsCopied(false), 1600);
-    } catch {
-      setIsCopied(false);
-      setCopyFailed(true);
-    }
-  };
-
   return (
-    <main className="min-h-screen bg-landing-paper text-landing-ink antialiased">
-      {/* ── Hero ── */}
-      <div className="relative flex min-h-[100svh] flex-col overflow-hidden">
-        <div className="absolute inset-0" aria-hidden="true">
-          <img
-            src={solarSystem}
-            alt=""
-            className="h-full w-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-landing-paper via-transparent to-landing-paper" />
-        </div>
-
-        <nav className="relative z-10 flex items-center justify-between px-6 py-5 sm:px-10">
-          <a href="/" className="flex items-center gap-3" aria-label="Ascendant home">
-            <img src={wordmark} alt="Ascendant" className="h-14 w-auto sm:h-16" />
-          </a>
-          <div className="flex items-center gap-6">
-            <Link
-              to="/docs/$"
-              params={{ _splat: 'chart' }}
-              className="text-[13px] font-semibold tracking-[0.12em] uppercase text-landing-ink/70 transition-transform active:scale-[0.96]"
-            >
-              Chart calculator
-            </Link>
-            <Link
-              to="/docs/$"
-              params={{ _splat: '' }}
-              className="rounded-full bg-landing-ink px-5 py-2.5 text-[13px] font-semibold tracking-[0.12em] text-landing-paper uppercase transition-transform active:scale-[0.96]"
-            >
-              Get started
-            </Link>
-          </div>
-        </nav>
-
-        <div className="relative z-10 mx-auto w-full max-w-3xl flex-1 px-6 pt-10 text-center sm:px-10 sm:pt-16">
-          <h1
-            className="text-balance text-5xl leading-[0.95] tracking-tight sm:text-7xl"
-          >
-            Understand your
-            <br />
-            birth chart.
-          </h1>
-        </div>
-
-        <div id="install" className="relative z-10 scroll-mt-24 mb-24 px-6 pb-6 sm:px-10">
-          <p className="mx-auto mb-4 max-w-lg text-center text-base leading-relaxed text-pretty text-landing-ink/75">
-            Unlike the broad and vague magazine horoscopes that only use your
-            sun sign, we use a complete picture of the sky when and where you
-            were born to generate your full birth chart.
-          </p>
-          <div className="mx-auto flex max-w-xl items-center justify-between gap-4 rounded-2xl border border-landing-ink/15 bg-landing-cream/90 px-5 py-3.5 backdrop-blur">
-            <code
-              title={INSTALL_CMD}
-              className="truncate font-mono text-[13px] text-landing-ink sm:text-sm"
-            >
-              <span className="mr-2 text-landing-ink/40">$</span>
-              {INSTALL_CMD}
-            </code>
-            <button
-              type="button"
-              onClick={handleCopy}
-              aria-label={isCopied ? 'Copied' : 'Copy install command'}
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-landing-ink/15 text-landing-ink/70 transition-[color,background-color,scale] hover:bg-landing-ink/8 hover:text-landing-ink active:scale-[0.96]"
-            >
-              <div className="relative">
-                <div
-                  className={cn(
-                    'absolute inset-0 flex items-center justify-center transition-[opacity,filter,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-opacity',
-                    isCopied
-                      ? 'scale-100 opacity-100 blur-0'
-                      : 'blur-xs scale-[0.25] opacity-0',
-                  )}
-                >
-                  <RiCheckLine size={18} />
-                </div>
-                <div
-                  className={cn(
-                    'transition-[opacity,filter,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-opacity',
-                    isCopied
-                      ? 'blur-xs scale-[0.25] opacity-0'
-                      : 'scale-100 opacity-100 blur-0',
-                  )}
-                >
-                  <RiFileCopyLine size={18} />
-                </div>
-              </div>
-            </button>
-            <span role="status" className="sr-only">
-              {copyFailed
-                ? 'Copy failed. Select the command text manually.'
-                : isCopied
-                  ? 'Install command copied.'
-                  : ''}
-            </span>
-          </div>
-        </div>
+    <main className="bg-landing flex min-h-screen flex-col p-6 text-landing-ink antialiased sm:p-10">
+      <div className="mx-auto w-full max-w-md lg:max-w-6xl">
+        <a href="/" aria-label="Ascendant home" className="inline-block">
+          <img src={wordmark} alt="Ascendant" height={32} className="h-8 w-auto" />
+        </a>
       </div>
+
+      <section
+        aria-label="Ascendant birth chart calculator"
+        className="mx-auto flex w-full max-w-md flex-1 items-center lg:max-w-6xl"
+      >
+        <div className="mt-6 grid w-full items-center gap-6 lg:mt-6 lg:grid-cols-[1fr_1.1fr] lg:gap-10">
+          <div className="order-first overflow-hidden rounded-2xl lg:order-last">
+            <img src={solarSystem} alt="" aria-hidden="true" className="h-auto w-full" />
+          </div>
+
+          <div className="flex flex-col items-start gap-6">
+            <h1 className="font-hand text-5xl leading-[1.05] text-balance sm:text-6xl lg:text-7xl">
+              Understand your
+              <br />
+              birth chart.
+            </h1>
+            <p className="max-w-md text-base leading-relaxed text-pretty text-landing-ink/80 sm:text-lg">
+              Unlike the broad and vague magazine horoscopes that only use your sun sign, we use a
+              complete picture of the sky when and where you were born to generate your full birth
+              chart.
+            </p>
+            <div className="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row sm:justify-start">
+              <Link
+                to="/docs/$"
+                params={{ _splat: "chart" }}
+                className="w-fit min-w-44 -rotate-1 rounded-2xl border-[3px] border-landing-ink bg-landing-ink px-8 py-2.5 text-center font-hand text-2xl text-landing-cream transition-transform hover:-translate-y-0.5 active:scale-95"
+              >
+                Analyse
+              </Link>
+              <Link
+                to="/docs/$"
+                params={{ _splat: "" }}
+                className="w-fit min-w-44 rotate-1 rounded-2xl border-[3px] border-landing-ink bg-transparent px-8 py-2.5 text-center font-hand text-2xl text-landing-ink transition-transform hover:-translate-y-0.5 active:scale-95"
+              >
+                Docs
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

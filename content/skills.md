@@ -61,25 +61,25 @@ Start a new Codex task after installation so the skill is loaded.
 
 Every directory below in [`thaletto/ascendant-agents`](https://github.com/thaletto/ascendant-agents) contains a ready-to-use `skills/ascendant/` copy. Copy it into the matching directory of your project root:
 
-| Harness | Copy from |
-|---|---|
-| Cursor | `.cursor/skills/ascendant/` |
-| Gemini CLI | `.gemini/skills/ascendant/` |
-| DeepSeek Harness | `.dsh/skills/ascendant/` |
-| Codex CLI (repo skills) | `.agents/skills/ascendant/` |
-| GitHub Copilot | `.github/skills/ascendant/` |
-| Kiro | `.kiro/skills/ascendant/` |
-| OpenCode | `.opencode/skills/ascendant/` (plus `.opencode/commands/ascendant.md` for the `/ascendant` slash command) |
-| Pi | `.pi/skills/ascendant/` |
-| Qoder | `.qoder/skills/ascendant/` |
-| Trae | `.trae/skills/ascendant/` |
-| Trae China | `.trae-cn/skills/ascendant/` |
-| Rovo Dev | `.rovodev/skills/ascendant/` |
-| Mistral Vibe | `.vibe/skills/ascendant/` |
-| Veto | `.veto/skills/ascendant/` |
-| Grok Build | `.grok/skills/ascendant/` |
-| Antigravity | `.agent/skills/ascendant/` |
-| Hermes Agent | `.hermes/skills/ascendant/` |
+| Harness                 | Copy from                                                                                                 |
+| ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| Cursor                  | `.cursor/skills/ascendant/`                                                                               |
+| Gemini CLI              | `.gemini/skills/ascendant/`                                                                               |
+| DeepSeek Harness        | `.dsh/skills/ascendant/`                                                                                  |
+| Codex CLI (repo skills) | `.agents/skills/ascendant/`                                                                               |
+| GitHub Copilot          | `.github/skills/ascendant/`                                                                               |
+| Kiro                    | `.kiro/skills/ascendant/`                                                                                 |
+| OpenCode                | `.opencode/skills/ascendant/` (plus `.opencode/commands/ascendant.md` for the `/ascendant` slash command) |
+| Pi                      | `.pi/skills/ascendant/`                                                                                   |
+| Qoder                   | `.qoder/skills/ascendant/`                                                                                |
+| Trae                    | `.trae/skills/ascendant/`                                                                                 |
+| Trae China              | `.trae-cn/skills/ascendant/`                                                                              |
+| Rovo Dev                | `.rovodev/skills/ascendant/`                                                                              |
+| Mistral Vibe            | `.vibe/skills/ascendant/`                                                                                 |
+| Veto                    | `.veto/skills/ascendant/`                                                                                 |
+| Grok Build              | `.grok/skills/ascendant/`                                                                                 |
+| Antigravity             | `.agent/skills/ascendant/`                                                                                |
+| Hermes Agent            | `.hermes/skills/ascendant/`                                                                               |
 
 ## After install
 

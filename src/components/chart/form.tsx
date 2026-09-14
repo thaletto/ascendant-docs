@@ -1,244 +1,287 @@
+import * as React from "react";
 import type { ReactNode } from "react";
+import { parseDate } from "chrono-node";
+import { CalendarBlankIcon, CircleNotchIcon } from "@phosphor-icons/react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { CityPicker } from "@/components/chart/city-picker";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useChart } from "@/components/chart/context";
 
 export function ChartFormFrame({ children }: { children: ReactNode }) {
-  const {
-    meta: { title },
-  } = useChart();
+  return <div className="flex flex-col gap-6">{children}</div>;
+}
+
+function FieldError({ id, message }: { id: string; message: string | undefined }) {
+  if (!message) {
+    return null;
+  }
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>
-          Enter birth time and place. Calculations run on the server with
-          Lahiri ayanamsa and Whole Sign houses.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-6">{children}</CardContent>
-    </Card>
+    <p id={id} className="text-sm text-destructive">
+      {message}
+    </p>
   );
+}
+
+export function ChartNameField() {
+  const {
+    state: { birth, savedProfiles, fieldErrors },
+    actions: { updateBirth, applyProfile },
+  } = useChart();
+  const error = fieldErrors.name;
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor="chart-name">Name</Label>
+      <Input
+        id="chart-name"
+        type="text"
+        placeholder="e.g. Priya"
+        autoComplete="off"
+        list="chart-saved-names"
+        value={birth.name}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? "chart-name-error" : undefined}
+        onChange={(event) => {
+          const value = event.target.value;
+          updateBirth({ name: value });
+          applyProfile(value);
+        }}
+        className="rounded-md"
+      />
+      <datalist id="chart-saved-names">
+        {savedProfiles.map((profile) => (
+          <option key={profile.name} value={profile.name} />
+        ))}
+      </datalist>
+      <FieldError id="chart-name-error" message={error} />
+    </div>
+  );
+}
+
+function parseBirthDate(value: string): Date | undefined {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return undefined;
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
+
+function toBirthDateString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function formatBirthDate(date: Date | undefined): string {
+  if (!date) return "";
+  return date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 export function ChartDateField() {
   const {
-    state: { birth },
+    state: { birth, fieldErrors },
     actions: { updateBirth },
   } = useChart();
+  const [open, setOpen] = React.useState(false);
+  const [text, setText] = React.useState(() => formatBirthDate(parseBirthDate(birth.date)));
+  React.useEffect(() => {
+    setText(formatBirthDate(parseBirthDate(birth.date)));
+  }, [birth.date]);
+  const preview = text.trim() === "" ? undefined : (parseDate(text) ?? undefined);
+  const today = new Date();
+  const error = fieldErrors.date;
+
+  const commitText = () => {
+    if (preview) {
+      updateBirth({ date: toBirthDateString(preview) });
+      setText(formatBirthDate(preview));
+    } else {
+      setText(formatBirthDate(parseBirthDate(birth.date)));
+    }
+  };
+
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor="chart-date">Birth date</Label>
-      <Input
-        id="chart-date"
-        type="date"
-        value={birth.date}
-        onChange={(event) => updateBirth({ date: event.target.value })}
-      />
+      <div className="relative">
+        <Input
+          id="chart-date"
+          value={text}
+          placeholder="1 Nov 2003"
+          autoComplete="off"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "chart-date-error" : undefined}
+          onChange={(event) => setText(event.target.value)}
+          onBlur={commitText}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commitText();
+            } else if (event.key === "ArrowDown") {
+              event.preventDefault();
+              setOpen(true);
+            }
+          }}
+          className="rounded-md pe-9"
+        />
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Select date"
+                className="absolute top-1/2 inset-inline-end-1 size-7 -translate-y-1/2"
+              />
+            }
+          >
+            <CalendarBlankIcon aria-hidden="true" />
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="end" sideOffset={8}>
+            <Calendar
+              mode="single"
+              selected={preview}
+              onSelect={(date) => {
+                if (date) {
+                  updateBirth({ date: toBirthDateString(date) });
+                  setText(formatBirthDate(date));
+                  setOpen(false);
+                }
+              }}
+              captionLayout="dropdown"
+              startMonth={new Date(today.getFullYear() - 120, today.getMonth())}
+              endMonth={today}
+              disabled={{ after: today }}
+              defaultMonth={preview ?? new Date(today.getFullYear() - 30, today.getMonth())}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      <FieldError id="chart-date-error" message={error} />
     </div>
   );
 }
 
 export function ChartTimeField() {
   const {
-    state: { birth },
+    state: { birth, fieldErrors },
     actions: { updateBirth },
   } = useChart();
+  const error = fieldErrors.time;
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor="chart-time">Birth time</Label>
       <Input
         id="chart-time"
         type="time"
+        step="1"
         value={birth.time}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? "chart-time-error" : undefined}
         onChange={(event) => updateBirth({ time: event.target.value })}
+        className="appearance-none rounded-md [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
       />
+      <FieldError id="chart-time-error" message={error} />
     </div>
   );
 }
 
-function parseCoordinate(value: string): number {
-  const trimmed = value.trim();
-  return trimmed === "" ? Number.NaN : Number(trimmed);
-}
-
-function offsetLabel(minutes: number): string {
-  const sign = minutes < 0 ? "-" : "+";
-  const absolute = Math.abs(minutes);
-  const hours = Math.floor(absolute / 60);
-  const rest = absolute % 60;
-  return `UTC${sign}${String(hours).padStart(2, "0")}:${String(rest).padStart(2, "0")}`;
-}
-
-export function ChartOffsetField() {
-  const {
-    state: { birth },
-    actions: { updateBirth },
-  } = useChart();
-  const options: number[] = [];
-  for (let minutes = -720; minutes <= 840; minutes += 30) {
-    options.push(minutes);
-  }
-  if (!options.includes(345)) {
-    options.push(345);
-  }
-  options.sort((a, b) => a - b);
-  return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor="chart-offset">Timezone offset</Label>
-      <Select
-        value={String(birth.utcOffsetMinutes)}
-        onValueChange={(value) =>
-          updateBirth({ utcOffsetMinutes: Number(value) })
-        }
-      >
-        <SelectTrigger id="chart-offset">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((minutes) => (
-            <SelectItem key={minutes} value={String(minutes)}>
-              {offsetLabel(minutes)}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
+const SEX_OPTIONS = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "", label: "Unspecified" },
+] as const;
 
 export function ChartSexField() {
   const {
     state: { birth },
     actions: { updateBirth },
   } = useChart();
+  const selected = birth.sex ?? "";
   return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor="chart-sex">Sex (optional)</Label>
-      <Select
-        value={birth.sex ?? "unspecified"}
-        onValueChange={(value) =>
-          updateBirth({
-            sex:
-              value === "unspecified"
-                ? undefined
-                : (value as "Male" | "Female"),
-          })
-        }
-      >
-        <SelectTrigger id="chart-sex">
-          <SelectValue placeholder="Not specified" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="unspecified">Not specified</SelectItem>
-          <SelectItem value="Male">Male</SelectItem>
-          <SelectItem value="Female">Female</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+    <fieldset className="m-0 flex flex-col gap-1.5 border-0 p-0">
+      <legend className="text-sm font-medium">Sex</legend>
+      <div className="bg-input/50 grid h-9 grid-cols-3 gap-1 rounded-md p-1">
+        {SEX_OPTIONS.map((option) => {
+          const checked = selected === option.value;
+          return (
+            <label
+              key={option.label}
+              className={`flex cursor-pointer items-center justify-center rounded-sm px-2 text-sm transition-colors focus-within:ring-2 focus-within:ring-ring ${
+                checked
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <input
+                type="radio"
+                name="chart-sex"
+                value={option.value}
+                checked={checked}
+                onChange={() =>
+                  updateBirth({
+                    sex: option.value === "" ? undefined : (option.value as "Male" | "Female"),
+                  })
+                }
+                className="sr-only"
+              />
+              {option.label}
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }
 
 export function ChartPlaceField() {
   const {
-    state: { birth, placeOptions, searching, searchError },
-    actions: { updateBirth, searchPlace, selectPlace },
+    state: { selectedPlace, placeOptions, searchError, fieldErrors },
+    actions: { queryPlaces, selectPlace },
   } = useChart();
+  const [open, setOpen] = React.useState(false);
+  const [query, setQuery] = React.useState("");
+  const error = fieldErrors.place;
+  React.useEffect(() => {
+    if (selectedPlace !== null) {
+      setQuery(selectedPlace.name);
+    }
+  }, [selectedPlace]);
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="chart-place">Birth place</Label>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <Input
-            id="chart-place"
-            type="text"
-            placeholder="City, Country"
-            value={birth.place}
-            onChange={(event) => updateBirth({ place: event.target.value })}
-            className="flex-1"
-          />
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={searching}
-            onClick={searchPlace}
-            className="shrink-0"
-          >
-            {searching ? "Searching" : "Search place"}
-          </Button>
-        </div>
-      </div>
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor="chart-place">Birth place</Label>
+      <CityPicker
+        value={selectedPlace}
+        options={placeOptions}
+        open={open}
+        query={query}
+        invalid={Boolean(error)}
+        describedBy={error ? "chart-place-error" : undefined}
+        onOpenChange={setOpen}
+        onQueryChange={(value) => {
+          setQuery(value);
+          queryPlaces(value);
+        }}
+        onSelect={(option) => {
+          selectPlace(option);
+          setQuery(option.name);
+          setOpen(false);
+        }}
+      />
+      <FieldError id="chart-place-error" message={error} />
       {searchError !== "" ? (
         <Alert variant="destructive">
           <AlertTitle>Place search</AlertTitle>
           <AlertDescription>{searchError}</AlertDescription>
         </Alert>
       ) : null}
-      {placeOptions.length > 0 ? (
-        <Select
-          onValueChange={(value) => {
-            if (typeof value === "string" && value !== "") {
-              selectPlace(value);
-            }
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Choose a matching place" />
-          </SelectTrigger>
-          <SelectContent>
-            {placeOptions.map((option) => (
-              <SelectItem
-                key={option.displayName}
-                value={option.displayName}
-              >
-                {option.displayName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ) : null}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="chart-latitude">Latitude</Label>
-          <Input
-            id="chart-latitude"
-            type="number"
-            step="any"
-            value={Number.isFinite(birth.latitude) ? birth.latitude : ""}
-            onChange={(event) =>
-              updateBirth({ latitude: parseCoordinate(event.target.value) })
-            }
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="chart-longitude">Longitude</Label>
-          <Input
-            id="chart-longitude"
-            type="number"
-            step="any"
-            value={Number.isFinite(birth.longitude) ? birth.longitude : ""}
-            onChange={(event) =>
-              updateBirth({ longitude: parseCoordinate(event.target.value) })
-            }
-          />
-        </div>
-      </div>
     </div>
   );
 }
@@ -248,13 +291,17 @@ export function ChartCalculateButton() {
     state: { status },
     actions: { calculate },
   } = useChart();
+  const busy = status === "calculating";
   return (
     <Button
       type="button"
-      disabled={status === "calculating"}
+      disabled={busy}
+      aria-busy={busy}
       onClick={calculate}
+      className="w-fit rounded-md"
     >
-      {status === "calculating" ? "Calculating" : "Calculate chart"}
+      {busy ? <CircleNotchIcon className="animate-spin" aria-hidden="true" /> : null}
+      Calculate chart
     </Button>
   );
 }

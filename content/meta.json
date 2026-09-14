@@ -1,4 +1,15 @@
 {
   "title": "Ascendant",
-  "pages": ["index", "chart", "skills", "api-reference", "configuration", "agents", "astrology", "library", "privacy", "terms"]
+  "pages": [
+    "index",
+    "chart",
+    "skills",
+    "api-reference",
+    "configuration",
+    "agents",
+    "astrology",
+    "library",
+    "privacy",
+    "terms"
+  ]
 }

@@ -3,7 +3,6 @@ title: Swisseph
 description: Swiss Ephemeris integration layer for the TypeScript astrology library.
 ---
 
-
 The root package exports the `Swisseph` namespace, which provides the
 Node.js/Bun adapter backed by `@swisseph/node`.
 
@@ -18,17 +17,15 @@ const runtimeLayer = Layer.mergeAll(
   AstroParams.DefaultAstroParams,
 );
 
-const examples = Chart.generate(input, [9]).pipe(
-  Effect.provide(runtimeLayer),
-);
+const examples = Chart.generate(input, [9]).pipe(Effect.provide(runtimeLayer));
 
 BunRuntime.runMain(examples);
 ```
 
 ## Exports
 
-| Export | Description |
-| --- | --- |
+| Export          | Description                                       |
+| --------------- | ------------------------------------------------- |
 | `SwissephLayer` | Effect layer implementing the `Ephemeris` service |
 
 The adapter implements date-to-Julian-day conversion, sidereal planetary
@@ -46,9 +43,7 @@ const layers = Layer.merge(
   }),
   Swisseph.SwissephLayer,
 );
-const result = await Effect.runPromise(
-  Chart.generate(input, [9]).pipe(Effect.provide(layers)),
-);
+const result = await Effect.runPromise(Chart.generate(input, [9]).pipe(Effect.provide(layers)));
 ```
 
 The package's public adapter surface intentionally exports the layer rather

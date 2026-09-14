@@ -3,7 +3,6 @@ title: Ephemeris
 description: Ephemeris service contract and runtime-neutral position models.
 ---
 
-
 `Ephemeris` is the runtime-neutral service contract used by chart generation.
 It keeps astronomical calculations separate from chart projection and allows
 applications to provide a different ephemeris implementation.
@@ -12,9 +11,7 @@ applications to provide a different ephemeris implementation.
 
 ```ts
 interface Ephemeris {
-  dateToJulianDay(
-    date: DateTime,
-  ): Effect.Effect<JulianDay, EphemerisError>;
+  dateToJulianDay(date: DateTime): Effect.Effect<JulianDay, EphemerisError>;
 
   calculatePosition(
     julianDay: JulianDay,

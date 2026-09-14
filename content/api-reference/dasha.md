@@ -3,7 +3,6 @@ title: Dasha
 description: Vimshottari, Chara, and Sthira dasha calculations and queries.
 ---
 
-
 The `Dasha` namespace calculates planetary Vimshottari periods and sign-based
 Jaimini Chara and Sthira periods. All dasha calculators consume a `Moment` and
 shared `Placements`.
@@ -29,19 +28,19 @@ functions `calculate`, `calculateChara`, `calculateSthira`, `at`, and
 `atRashi`.
 
 ```ts
-const vimshottari = yield* Dasha.calculate(moment, placements);
+const vimshottari = yield * Dasha.calculate(moment, placements);
 const current = Dasha.at(vimshottari, moment.date);
 ```
 
 ## Functions
 
-| Function | Description |
-| --- | --- |
-| `calculate(moment, placements)` | Builds a Vimshottari timeline |
-| `at(timeline, date)` | Finds the active Vimshottari Maha Dasha and Antar Dasha |
-| `calculateChara(moment, placements)` | Builds the Chara sign timeline |
+| Function                              | Description                                                 |
+| ------------------------------------- | ----------------------------------------------------------- |
+| `calculate(moment, placements)`       | Builds a Vimshottari timeline                               |
+| `at(timeline, date)`                  | Finds the active Vimshottari Maha Dasha and Antar Dasha     |
+| `calculateChara(moment, placements)`  | Builds the Chara sign timeline                              |
 | `calculateSthira(moment, placements)` | Builds the Sthira sign timeline, including Brahma selection |
-| `atRashi(timeline, date)` | Finds the active Chara or Sthira Maha Dasha and Antar Dasha |
+| `atRashi(timeline, date)`             | Finds the active Chara or Sthira Maha Dasha and Antar Dasha |
 
 The focused submodules expose the same operations:
 

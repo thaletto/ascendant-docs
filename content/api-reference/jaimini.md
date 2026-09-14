@@ -3,19 +3,18 @@ title: Jaimini
 description: Jaimini calculations for Chara Karakas, Rashi Drishti, Karakamsha, Arudha Pada, Upapada, and Argala.
 ---
 
-
 Ascendant exposes each Jaimini calculation as an independent root subpath.
 They consume `Chart.Placements` unless noted otherwise and return typed Effect
 results.
 
-| Subpath | Namespace | Entry point | Purpose |
-| --- | --- | --- | --- |
-| `astro-ascendant/chara-karakas` | `CharaKarakas` | `calculate(placements)` | Assigns the seven Chara Karaka roles |
-| `astro-ascendant/rashi-drishti` | `RashiDrishti` | `calculate(reference)` | Returns sign-aspect relationships for a reference sign |
-| `astro-ascendant/karakamsha` | `Karakamsha` | `calculate(placements)` | Finds the D9 sign for each Atmakaraka holder |
-| `astro-ascendant/arudha-pada` | `ArudhaPada` | `calculate(placements, house)` | Calculates one house's Arudha Pada |
-| `astro-ascendant/upapada` | `Upapada` | `calculate(placements)` | Calculates the twelfth-house Arudha Pada |
-| `astro-ascendant/argala` | `Argala` | `calculate(placements, reference)` | Calculates supporting and obstructing Argala |
+| Subpath                         | Namespace      | Entry point                        | Purpose                                                |
+| ------------------------------- | -------------- | ---------------------------------- | ------------------------------------------------------ |
+| `astro-ascendant/chara-karakas` | `CharaKarakas` | `calculate(placements)`            | Assigns the seven Chara Karaka roles                   |
+| `astro-ascendant/rashi-drishti` | `RashiDrishti` | `calculate(reference)`             | Returns sign-aspect relationships for a reference sign |
+| `astro-ascendant/karakamsha`    | `Karakamsha`   | `calculate(placements)`            | Finds the D9 sign for each Atmakaraka holder           |
+| `astro-ascendant/arudha-pada`   | `ArudhaPada`   | `calculate(placements, house)`     | Calculates one house's Arudha Pada                     |
+| `astro-ascendant/upapada`       | `Upapada`      | `calculate(placements)`            | Calculates the twelfth-house Arudha Pada               |
+| `astro-ascendant/argala`        | `Argala`       | `calculate(placements, reference)` | Calculates supporting and obstructing Argala           |
 
 The same namespaces are available from the package root:
 

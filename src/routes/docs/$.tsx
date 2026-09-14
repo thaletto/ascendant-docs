@@ -1,8 +1,8 @@
-import { createFileRoute, notFound } from '@tanstack/react-router';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { createServerFn } from '@tanstack/react-start';
-import { slugsToMarkdownPath, source } from '@/lib/source';
-import browserCollections from 'collections/browser';
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { createServerFn } from "@tanstack/react-start";
+import { slugsToMarkdownPath, source } from "@/lib/source";
+import browserCollections from "collections/browser";
 import {
   DocsBody,
   DocsDescription,
@@ -10,17 +10,17 @@ import {
   DocsTitle,
   MarkdownCopyButton,
   ViewOptionsPopover,
-} from 'fumadocs-ui/layouts/docs/page';
-import { baseOptions } from '@/lib/layout.shared';
-import { agentGitConfig, gitConfig } from '@/lib/shared';
-import { useFumadocsLoader } from 'fumadocs-core/source/client';
-import { Suspense } from 'react';
-import { useMDXComponents } from '@/components/mdx';
+} from "fumadocs-ui/layouts/docs/page";
+import { baseOptions } from "@/lib/layout.shared";
+import { agentGitConfig, gitConfig } from "@/lib/shared";
+import { useFumadocsLoader } from "fumadocs-core/source/client";
+import { Suspense } from "react";
+import { useMDXComponents } from "@/components/mdx";
 
-export const Route = createFileRoute('/docs/$')({
+export const Route = createFileRoute("/docs/$")({
   component: Page,
   loader: async ({ params }) => {
-    const slugs = params._splat?.split('/') ?? [];
+    const slugs = params._splat?.split("/") ?? [];
     const data = await serverLoader({ data: slugs });
     await clientLoader.preload(data.path);
     return data;
@@ -28,7 +28,7 @@ export const Route = createFileRoute('/docs/$')({
 });
 
 const serverLoader = createServerFn({
-  method: 'GET',
+  method: "GET",
 })
   .validator((slugs: string[]) => slugs)
   .handler(async ({ data: slugs }) => {
@@ -60,10 +60,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
         <DocsDescription>{frontmatter.description}</DocsDescription>
         <div className="flex flex-row gap-2 items-center border-b -mt-4 pb-6">
           <MarkdownCopyButton markdownUrl={markdownUrl} />
-          <ViewOptionsPopover
-            markdownUrl={markdownUrl}
-            githubUrl={getGitHubUrl(path)}
-          />
+          <ViewOptionsPopover markdownUrl={markdownUrl} githubUrl={getGitHubUrl(path)} />
         </div>
         <DocsBody>
           <MDX components={useMDXComponents()} />
@@ -79,8 +76,7 @@ function getGitHubUrl(path: string) {
   const revisionUrl = `${repositoryUrl}/blob/${gitConfig.branch}`;
 
   if (skill) {
-    const agentRepositoryUrl =
-      `https://github.com/${agentGitConfig.user}/${agentGitConfig.repo}`;
+    const agentRepositoryUrl = `https://github.com/${agentGitConfig.user}/${agentGitConfig.repo}`;
     return `${agentRepositoryUrl}/blob/${agentGitConfig.branch}/plugins/agent/ascendant/skills/${skill}/SKILL.md`;
   }
   return `${revisionUrl}/content/${path}`;

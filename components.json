@@ -6,11 +6,11 @@
   "tailwind": {
     "config": "",
     "css": "src/styles/app.css",
-    "baseColor": "olive",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
-  "iconLibrary": "hugeicons",
+  "iconLibrary": "phosphor",
   "rtl": false,
   "aliases": {
     "components": "@/components",
@@ -19,7 +19,7 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "menuColor": "inverted",
+  "menuColor": "default-translucent",
   "menuAccent": "subtle",
   "registries": {}
 }

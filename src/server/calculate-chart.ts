@@ -14,8 +14,10 @@ import {
 import { Data, DateTime, Effect, Layer, Option } from "effect";
 import {
   ALL_DIVISIONS,
+  uniqueHousesInOrder,
   type ChartDashaPeriod,
   type ChartResult,
+  type KpSignificatorRow,
 } from "@/lib/chart";
 
 const RASHIS = [
@@ -37,6 +39,8 @@ type RashiName = (typeof RASHIS)[number];
 
 const HOUSES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
+const SAV_PLANETS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"] as const;
+
 export interface CalculateChartInput {
   readonly utcIso: string;
   readonly latitude: number;
@@ -45,22 +49,78 @@ export interface CalculateChartInput {
   readonly sex?: "Male" | "Female";
 }
 
-export class CalculateChartError extends Data.TaggedError(
-  "CalculateChartError",
-)<{
+export class CalculateChartError extends Data.TaggedError("CalculateChartError")<{
   readonly message: string;
 }> {}
 
-// V1 pins the documented sidereal defaults: Lahiri ayanamsa with Whole Sign
-// houses. The installed engine's own defaults differ, so the layer is built
-// explicitly instead of relying on them.
+// Product charts use Lahiri ayanamsa with Whole Sign houses, surfaced
+// per-result as calculation.astroParams.
 const AstroLayer = Layer.mergeAll(
   AstroParams.layer({ ayanamsa: "Lahiri", houseSystem: "WholeSign" }),
   Swisseph.SwissephLayer,
 );
 
+const KpAstroLayer = Layer.mergeAll(
+  AstroParams.layer({ ayanamsa: "Krishnamurti", houseSystem: "Placidus" }),
+  Swisseph.SwissephLayer,
+);
+
+const PLANET_ORDER = [
+  "Sun",
+  "Moon",
+  "Mars",
+  "Mercury",
+  "Jupiter",
+  "Venus",
+  "Saturn",
+  "Rahu",
+  "Ketu",
+] as const;
+
+const NAKSHATRA_SPAN = 360 / 27;
+const NAKSHATRA_LORD_CYCLE = [
+  "Ketu",
+  "Venus",
+  "Sun",
+  "Moon",
+  "Mars",
+  "Rahu",
+  "Jupiter",
+  "Saturn",
+  "Mercury",
+] as const;
+const VIMSHOTTARI_YEARS: Record<(typeof NAKSHATRA_LORD_CYCLE)[number], number> = {
+  Ketu: 7,
+  Venus: 20,
+  Sun: 6,
+  Moon: 10,
+  Mars: 7,
+  Rahu: 18,
+  Jupiter: 16,
+  Saturn: 19,
+  Mercury: 17,
+};
+
 function normalizeLongitude(longitude: number): number {
   return ((longitude % 360) + 360) % 360;
+}
+
+function kpSubLord(longitude: number): string {
+  const position = normalizeLongitude(longitude);
+  const starIndex = Math.floor(position / NAKSHATRA_SPAN) % NAKSHATRA_LORD_CYCLE.length;
+  const starLord = NAKSHATRA_LORD_CYCLE[starIndex] ?? "Ketu";
+  const ratio = (position % NAKSHATRA_SPAN) / NAKSHATRA_SPAN;
+  const start = NAKSHATRA_LORD_CYCLE.indexOf(starLord);
+  let elapsed = 0;
+  for (let offset = 0; offset < NAKSHATRA_LORD_CYCLE.length; offset += 1) {
+    const planet = NAKSHATRA_LORD_CYCLE[(start + offset) % NAKSHATRA_LORD_CYCLE.length] ?? starLord;
+    const width = VIMSHOTTARI_YEARS[planet] / 120;
+    if (ratio < elapsed + width) {
+      return planet;
+    }
+    elapsed += width;
+  }
+  return starLord;
 }
 
 function degreeInSign(longitude: number): string {
@@ -78,9 +138,7 @@ function titleCase(value: string): string {
   return value
     .toLowerCase()
     .split("_")
-    .map((word) =>
-      word.length > 0 ? word[0].toUpperCase() + word.slice(1) : word,
-    )
+    .map((word) => (word.length > 0 ? word[0].toUpperCase() + word.slice(1) : word))
     .join(" ");
 }
 
@@ -155,25 +213,21 @@ function readDivisions(
   return calculation.charts.map((chart) => {
     const division = chart.division;
     const planetHouse = new Map<string, number>();
-    const houses: ChartResult["divisions"][number]["houses"] = HOUSES.map(
-      (houseNumber) => {
-        const house = chart.houses[houseNumber];
-        const occupants = house.planets.map((planet) => {
-          planetHouse.set(planet.name, houseNumber);
-          return planet.name;
-        });
-        return {
-          number: houseNumber,
-          sign: house.sign,
-          cusp: house.cusp?.toFixed(1) ?? "",
-          lord: house.signLord ?? "",
-          occupants,
-          significators: (house.significations ?? []).filter(
-            (entry) => entry !== "",
-          ),
-        };
-      },
-    );
+    const houses: ChartResult["divisions"][number]["houses"] = HOUSES.map((houseNumber) => {
+      const house = chart.houses[houseNumber];
+      const occupants = house.planets.map((planet) => {
+        planetHouse.set(planet.name, houseNumber);
+        return planet.name;
+      });
+      return {
+        number: houseNumber,
+        sign: house.sign,
+        cusp: house.cusp?.toFixed(1) ?? "",
+        lord: house.signLord ?? "",
+        occupants,
+        significators: (house.significations ?? []).filter((entry) => entry !== ""),
+      };
+    });
     const isSourceDivision = division === 1;
     const placements = HOUSES.flatMap((houseNumber) =>
       chart.houses[houseNumber].planets.map((planet) => {
@@ -187,9 +241,7 @@ function readDivisions(
           // reuse projected signs and houses, so only D1 rows carry them.
           nakshatra: isSourceDivision ? (source?.nakshatra.name ?? "") : "",
           pada: isSourceDivision ? (source?.nakshatra.pada ?? null) : null,
-          state: planet.is_retrograde
-            ? "Retrograde"
-            : dignityLabel(planet.in_sign),
+          state: planet.is_retrograde ? "Retrograde" : dignityLabel(planet.in_sign),
         };
       }),
     );
@@ -202,12 +254,77 @@ function readD1Lagna(chart: Chart.Chart): {
   degree: string;
 } {
   const lagnaHouse =
-    HOUSES.map((houseNumber) => chart.houses[houseNumber]).find(
-      (house) => house.lagna !== null,
-    ) ?? chart.houses[1];
+    HOUSES.map((houseNumber) => chart.houses[houseNumber]).find((house) => house.lagna !== null) ??
+    chart.houses[1];
   return {
     sign: lagnaHouse.sign,
     degree: lagnaHouse.lagna?.degree.toFixed(1) ?? "",
+  };
+}
+
+function signifyingHousesOf(signification: Chart.PlanetSignification | undefined): number[] {
+  if (signification === undefined) {
+    return [];
+  }
+  return uniqueHousesInOrder([
+    signification.level1,
+    signification.level2,
+    signification.level3,
+    signification.level4,
+  ]);
+}
+
+function planetSignification(
+  chart: Chart.Chart,
+  planet: string,
+): Chart.PlanetSignification | undefined {
+  if (planet === "" || planet === "Lagna") {
+    return undefined;
+  }
+  return chart.planetSignifications?.[planet as Chart.Planets];
+}
+
+function readKpChart(calculation: Chart.ChartCalculation): ChartResult["kp"] {
+  const d1 = calculation.charts.find((chart) => chart.division === 1) ?? calculation.charts[0];
+  const sourceByName = new Map(
+    calculation.placements.planets.map((planet) => [planet.name, planet]),
+  );
+  const planetByName = new Map<string, Chart.Planet>();
+  for (const houseNumber of HOUSES) {
+    for (const planet of d1.houses[houseNumber].planets) {
+      planetByName.set(planet.name, planet);
+    }
+  }
+
+  const rows: KpSignificatorRow[] = [];
+  const lagnaHouse = d1.houses[1];
+  const lagnaSubLord = lagnaHouse.subLord ?? "";
+  rows.push({
+    name: "Lagna",
+    signLord: lagnaHouse.signLord ?? "",
+    starLord: lagnaHouse.starLord ?? "",
+    subLord: lagnaSubLord,
+    signifyingHouses: signifyingHousesOf(planetSignification(d1, lagnaSubLord)),
+  });
+
+  for (const name of PLANET_ORDER) {
+    const planet = planetByName.get(name);
+    const source = sourceByName.get(name);
+    rows.push({
+      name,
+      signLord: planet?.sign.lord ?? "",
+      starLord: source?.nakshatra.lord ?? "",
+      subLord: planet === undefined ? "" : kpSubLord(planet.longitude),
+      signifyingHouses: signifyingHousesOf(planetSignification(d1, name)),
+    });
+  }
+
+  return {
+    astroParams: {
+      ayanamsa: calculation.astroParams.ayanamsa,
+      houseSystem: calculation.astroParams.houseSystem,
+    },
+    rows,
   };
 }
 
@@ -225,25 +342,17 @@ export function calculateChart(
       ...(input.sex ? { sex: input.sex } : {}),
     });
     const calculation = yield* Chart.generate(chartInput, [...ALL_DIVISIONS]);
+    const kpCalculation = yield* Chart.generate(chartInput, [1]).pipe(Effect.provide(KpAstroLayer));
     const placements = calculation.placements;
 
-    const d1 =
-      calculation.charts.find((chart) => chart.division === 1) ??
-      calculation.charts[0];
-    const { sign: lagnaSign, degree: lagnaDegree } = readD1Lagna(d1);    const vimshottari = yield* Effect.option(
-      Dasha.calculate(moment, placements),
-    );
-    const chara = yield* Effect.option(
-      Dasha.calculateChara(moment, placements),
-    );
-    const sthira = yield* Effect.option(
-      Dasha.calculateSthira(moment, placements),
-    );
+    const d1 = calculation.charts.find((chart) => chart.division === 1) ?? calculation.charts[0];
+    const { sign: lagnaSign, degree: lagnaDegree } = readD1Lagna(d1);
+    const vimshottari = yield* Effect.option(Dasha.calculate(moment, placements));
+    const chara = yield* Effect.option(Dasha.calculateChara(moment, placements));
+    const sthira = yield* Effect.option(Dasha.calculateSthira(moment, placements));
     const sav = yield* Effect.option(SAV.calculate(placements));
     const karakas = yield* Effect.option(CharaKarakas.calculate(placements));
-    const karakamsha = yield* Effect.option(
-      Karakamsha.calculate(placements),
-    );
+    const karakamsha = yield* Effect.option(Karakamsha.calculate(placements));
     const upapada = yield* Effect.option(Upapada.calculate(placements));
     const drishti = yield* Effect.option(RashiDrishti.calculate(lagnaSign));
     const argala = yield* Effect.option(
@@ -252,9 +361,7 @@ export function calculateChart(
 
     const arudha: ChartResult["jaimini"]["arudha"] = [];
     for (const house of HOUSES) {
-      const pada = yield* Effect.option(
-        ArudhaPada.calculate(placements, house),
-      );
+      const pada = yield* Effect.option(ArudhaPada.calculate(placements, house));
       arudha.push({
         house,
         pada: Option.getOrElse(pada, () => null)?.sign ?? "",
@@ -272,13 +379,19 @@ export function calculateChart(
     }
 
     const savResult = Option.getOrElse(sav, () => null);
-    const savScores =
+    const savTable: ChartResult["sav"] =
       savResult === null
-        ? []
-        : RASHIS.map((sign) => ({
-            sign,
-            score: savResult.sarva[sign],
-          }));
+        ? { signs: [...RASHIS], rows: [], signTotals: [], total: 0 }
+        : {
+            signs: [...RASHIS],
+            rows: SAV_PLANETS.map((planet) => ({
+              planet,
+              points: RASHIS.map((sign) => savResult.bhinna[planet][sign]),
+              total: savResult.totals[planet],
+            })),
+            signTotals: RASHIS.map((sign) => savResult.sarva[sign]),
+            total: savResult.totals.sarva,
+          };
 
     const result: ChartResult = {
       birth: {
@@ -297,22 +410,16 @@ export function calculateChart(
         degree: lagnaDegree,
         house: 1,
       },
+      kp: readKpChart(kpCalculation),
       divisions: readDivisions(calculation, placements.planets),
       dasha: {
-        vimshottari: toDashaPeriods(
-          Option.getOrElse(vimshottari, () => []),
-        ),
-        chara: toDashaPeriods(
-          Option.getOrElse(chara, () => null)?.mahadashas ?? [],
-        ),
-        sthira: toDashaPeriods(
-          Option.getOrElse(sthira, () => null)?.mahadashas ?? [],
-        ),
+        vimshottari: toDashaPeriods(Option.getOrElse(vimshottari, () => [])),
+        chara: toDashaPeriods(Option.getOrElse(chara, () => null)?.mahadashas ?? []),
+        sthira: toDashaPeriods(Option.getOrElse(sthira, () => null)?.mahadashas ?? []),
       },
       jaimini: {
         karakas: karakaRows,
-        karakamsha:
-          Option.getOrElse(karakamsha, () => null)?.placements[0]?.sign ?? "",
+        karakamsha: Option.getOrElse(karakamsha, () => null)?.placements[0]?.sign ?? "",
         upapada: Option.getOrElse(upapada, () => null)?.sign ?? "",
         arudha,
         drishti: [...(Option.getOrElse(drishti, () => null)?.targets ?? [])],
@@ -320,15 +427,12 @@ export function calculateChart(
           supporting: (Option.getOrElse(argala, () => null)?.supporting ?? []).map(
             (relation) => relation.sign,
           ),
-          obstructing: (
-            Option.getOrElse(argala, () => null)?.obstructing ?? []
-          ).map((relation) => relation.sign),
+          obstructing: (Option.getOrElse(argala, () => null)?.obstructing ?? []).map(
+            (relation) => relation.sign,
+          ),
         },
       },
-      sav: {
-        total: savScores.reduce((sum, item) => sum + item.score, 0),
-        scores: savScores,
-      },
+      sav: savTable,
     };
     return result;
   });

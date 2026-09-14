@@ -22,23 +22,21 @@ const runtimeLayer = Layer.mergeAll(
   }),
 );
 
-const runnable = program.pipe(
-  Effect.provide(runtimeLayer)
-);
+const runnable = program.pipe(Effect.provide(runtimeLayer));
 
 BunRuntime.runMain(runnable);
 ```
 
 ## Exports
 
-| Export | Description |
-| --- | --- |
-| `Ayanamsa` | Schema and type for the supported sidereal ayanamsas |
-| `HouseSystem` | Schema and type for supported house systems |
-| `Options` | `{ ayanamsa, houseSystem }` configuration object |
-| `AstroParams` | Effect service consumed by chart generation |
-| `layer(options)` | Builds a layer providing the supplied configuration |
-| `DefaultAstroParams` | Lahiri ayanamsa with Whole Sign houses |
+| Export               | Description                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------- |
+| `Ayanamsa`           | Schema and type for the supported sidereal ayanamsas                                            |
+| `HouseSystem`        | Schema and type for supported house systems                                                     |
+| `Options`            | `{ ayanamsa, houseSystem }` configuration object                                                |
+| `AstroParams`        | Effect service consumed by chart generation                                                     |
+| `layer(options)`     | Builds a layer providing the supplied configuration                                             |
+| `DefaultAstroParams` | Krishnamurti ayanamsa with Placidus houses (engine default; pass explicit options to change it) |
 
 Supported house systems:
 
@@ -99,4 +97,3 @@ Supported ayanamsas:
 - `BabylBritton`
 
 Use the schema as the authoritative list when presenting a selection to users.
-

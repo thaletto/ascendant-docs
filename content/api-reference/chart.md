@@ -3,7 +3,6 @@ title: Chart
 description: Chart generation and placement models for D1 and divisional charts.
 ---
 
-
 The `Chart` namespace is the main entry point. It calculates shared sidereal
 placements once and projects them into D1 and requested divisional charts.
 `Chart.generate` also calculates house cusps and angles through the supplied
@@ -24,10 +23,7 @@ const input = Chart.ChartParams.make({
   sex: "Male",
 });
 
-const program = Chart.generate(input, [9]).pipe(
-  Effect.provide(runtimeLayer)
-);
-
+const program = Chart.generate(input, [9]).pipe(Effect.provide(runtimeLayer));
 ```
 
 ## Functions
@@ -51,18 +47,18 @@ Use this when several chart views should share the same placement evidence.
 
 ## Core models
 
-| Model | Important fields |
-| --- | --- |
-| `Moment` | UTC `date` |
-| `LocatedMoment` | `moment`, finite `latitude`, finite `longitude` |
-| `ChartParams` | `LocatedMoment` fields plus optional `sex` |
-| `Placements` | source `lagna` and source planet positions |
-| `ChartCalculation` | `placements`, `charts`, and `astroParams` |
-| `Chart` | `division`, cusp-aware `houses`, optional angles and significations |
-| `House` | sign, cusp, lords, planets, and optional Lagna |
-| `Planet` | longitude, degree, retrograde state, dignity, and sign |
-| `Nakshatra` | name, lord, and pada |
-| `Sign` | sign name and classical lord |
+| Model              | Important fields                                                    |
+| ------------------ | ------------------------------------------------------------------- |
+| `Moment`           | UTC `date`                                                          |
+| `LocatedMoment`    | `moment`, finite `latitude`, finite `longitude`                     |
+| `ChartParams`      | `LocatedMoment` fields plus optional `sex`                          |
+| `Placements`       | source `lagna` and source planet positions                          |
+| `ChartCalculation` | `placements`, `charts`, and `astroParams`                           |
+| `Chart`            | `division`, cusp-aware `houses`, optional angles and significations |
+| `House`            | sign, cusp, lords, planets, and optional Lagna                      |
+| `Planet`           | longitude, degree, retrograde state, dignity, and sign              |
+| `Nakshatra`        | name, lord, and pada                                                |
+| `Sign`             | sign name and classical lord                                        |
 
 `Chart` uses one-directional relationships: a house lists its planets, while a
 planet does not carry a back-reference to its house. To find a planet's house,

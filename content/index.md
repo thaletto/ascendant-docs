@@ -59,9 +59,7 @@ birth sex.
 chart.
 
 ```ts
-const examples = Chart.generate(input, [9]).pipe(
-  Effect.provide(runtimeLayer),
-);
+const examples = Chart.generate(input, [9]).pipe(Effect.provide(runtimeLayer));
 ```
 
 ## 5. Print the results

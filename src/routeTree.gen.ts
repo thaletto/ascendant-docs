@@ -14,6 +14,7 @@ import { Route as LlmsFullDottxtRouteImport } from './routes/llms-full[.]txt'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as ApiChartRouteImport } from './routes/api/chart'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
+import { Route as ApiTimezoneRouteImport } from './routes/api/timezone'
 import { Route as DocsSplatRouteImport } from './routes/docs/$'
 import { Route as DocsChar123Char125DotmdRouteImport } from './routes/docs/{$}[.]md'
 
@@ -42,6 +43,11 @@ const ApiSearchRoute = ApiSearchRouteImport.update({
   path: '/api/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTimezoneRoute = ApiTimezoneRouteImport.update({
+  id: '/api/timezone',
+  path: '/api/timezone',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocsSplatRoute = DocsSplatRouteImport.update({
   id: '/docs/$',
   path: '/docs/$',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/llms.txt': typeof LlmsDottxtRoute
   '/api/chart': typeof ApiChartRoute
   '/api/search': typeof ApiSearchRoute
+  '/api/timezone': typeof ApiTimezoneRoute
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.md': typeof DocsChar123Char125DotmdRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/llms.txt': typeof LlmsDottxtRoute
   '/api/chart': typeof ApiChartRoute
   '/api/search': typeof ApiSearchRoute
+  '/api/timezone': typeof ApiTimezoneRoute
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.md': typeof DocsChar123Char125DotmdRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/llms.txt': typeof LlmsDottxtRoute
   '/api/chart': typeof ApiChartRoute
   '/api/search': typeof ApiSearchRoute
+  '/api/timezone': typeof ApiTimezoneRoute
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.md': typeof DocsChar123Char125DotmdRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/llms.txt'
     | '/api/chart'
     | '/api/search'
+    | '/api/timezone'
     | '/docs/$'
     | '/docs/{$}.md'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/llms.txt'
     | '/api/chart'
     | '/api/search'
+    | '/api/timezone'
     | '/docs/$'
     | '/docs/{$}.md'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/llms.txt'
     | '/api/chart'
     | '/api/search'
+    | '/api/timezone'
     | '/docs/$'
     | '/docs/{$}.md'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   ApiChartRoute: typeof ApiChartRoute
   ApiSearchRoute: typeof ApiSearchRoute
+  ApiTimezoneRoute: typeof ApiTimezoneRoute
   DocsSplatRoute: typeof DocsSplatRoute
   DocsChar123Char125DotmdRoute: typeof DocsChar123Char125DotmdRoute
 }
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/timezone': {
+      id: '/api/timezone'
+      path: '/api/timezone'
+      fullPath: '/api/timezone'
+      preLoaderRoute: typeof ApiTimezoneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docs/$': {
       id: '/docs/$'
       path: '/docs/$'
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   LlmsDottxtRoute: LlmsDottxtRoute,
   ApiChartRoute: ApiChartRoute,
   ApiSearchRoute: ApiSearchRoute,
+  ApiTimezoneRoute: ApiTimezoneRoute,
   DocsSplatRoute: DocsSplatRoute,
   DocsChar123Char125DotmdRoute: DocsChar123Char125DotmdRoute,
 }
