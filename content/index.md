@@ -16,7 +16,8 @@ bun add astro-ascendant effect@rc
 
 ## 1. Import the packages
 
-This example uses Bun, the default Lahiri ayanamsa, and Whole Sign houses.
+This example uses Bun, Krishnamurti ayanamsa, and Placidus houses
+(`AstroParams.DefaultAstroParams`).
 
 ```ts
 import { BunRuntime, BunServices } from "@effect/platform-bun";

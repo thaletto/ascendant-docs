@@ -16,10 +16,7 @@ import { Effect, Layer } from "effect";
 const runtimeLayer = Layer.mergeAll(
   BunServices.layer,
   Swisseph.SwissephLayer,
-  AstroParams.layer({
-    ayanamsa: "Lahiri",
-    houseSystem: "WholeSign",
-  }),
+  AstroParams.DefaultAstroParams,
 );
 
 const runnable = program.pipe(Effect.provide(runtimeLayer));
@@ -29,14 +26,14 @@ BunRuntime.runMain(runnable);
 
 ## Exports
 
-| Export               | Description                                                                                     |
-| -------------------- | ----------------------------------------------------------------------------------------------- |
-| `Ayanamsa`           | Schema and type for the supported sidereal ayanamsas                                            |
-| `HouseSystem`        | Schema and type for supported house systems                                                     |
-| `Options`            | `{ ayanamsa, houseSystem }` configuration object                                                |
-| `AstroParams`        | Effect service consumed by chart generation                                                     |
-| `layer(options)`     | Builds a layer providing the supplied configuration                                             |
-| `DefaultAstroParams` | Krishnamurti ayanamsa with Placidus houses (engine default; pass explicit options to change it) |
+| Export               | Description                                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| `Ayanamsa`           | Schema and type for the supported sidereal ayanamsas                                             |
+| `HouseSystem`        | Schema and type for supported house systems                                                      |
+| `Options`            | `{ ayanamsa, houseSystem }` configuration object                                                 |
+| `AstroParams`        | Effect service consumed by chart generation                                                      |
+| `layer(options)`     | Builds a layer providing the supplied configuration                                              |
+| `DefaultAstroParams` | Krishnamurti ayanamsa with Placidus houses (library default; pass explicit options to change it) |
 
 Supported house systems:
 
