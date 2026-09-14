@@ -1,7 +1,7 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import appCss from "@/styles/app.css?url";
 import { RootProvider } from "fumadocs-ui/provider/tanstack";
-import moonImage from "../../assets/planets/moon.png";
+import favicon from "../../assets/favicon.svg";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -45,7 +45,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/png", href: moonImage },
+      { rel: "icon", type: "image/svg+xml", href: favicon },
     ],
   }),
   component: RootComponent,
