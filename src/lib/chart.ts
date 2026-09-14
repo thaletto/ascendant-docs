@@ -786,7 +786,7 @@ export function buildClaudePromptUrl(result: ChartResult): string {
   const currentIndex = findCurrentPeriodIndex(result.dasha.vimshottari);
   const currentMahadasha = currentIndex === -1 ? undefined : result.dasha.vimshottari[currentIndex];
   const prompt = [
-    "/ascendant",
+    "/ascendant (install plugin thaletto/ascendant-agents)",
     "",
     divisionChartMarkdown(result, 1),
     "",

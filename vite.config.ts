@@ -21,6 +21,9 @@ export default defineConfig({
     // please see https://tanstack.com/start/latest/docs/framework/react/guide/hosting#nitro for guides on hosting
     nitro({
       preset: "vercel",
+      // These packages load data/native files with __dirname. Nitro's ESM
+      // bundle drops that, so keep them as CJS and copy their full trees.
+      traceDeps: ["@swisseph/node*", "geo-tz*"],
     }),
   ],
   resolve: {
