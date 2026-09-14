@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { CityPicker } from "@/components/chart/city-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -110,8 +111,8 @@ export function ChartDateField() {
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor="chart-date">Birth date</Label>
-      <div className="relative">
-        <Input
+      <InputGroup className="rounded-md">
+        <InputGroupInput
           id="chart-date"
           value={text}
           placeholder="1 Nov 2003"
@@ -129,41 +130,37 @@ export function ChartDateField() {
               setOpen(true);
             }
           }}
-          className="rounded-md pe-9"
         />
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Select date"
-                className="absolute top-1/2 inset-inline-end-1 size-7 -translate-y-1/2"
+        <InputGroupAddon align="inline-end">
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger
+              render={
+                <InputGroupButton size="icon-xs" variant="ghost" aria-label="Select date" />
+              }
+            >
+              <CalendarBlankIcon aria-hidden="true" />
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end" sideOffset={8}>
+              <Calendar
+                mode="single"
+                selected={preview}
+                onSelect={(date) => {
+                  if (date) {
+                    updateBirth({ date: toBirthDateString(date) });
+                    setText(formatBirthDate(date));
+                    setOpen(false);
+                  }
+                }}
+                captionLayout="dropdown"
+                startMonth={new Date(today.getFullYear() - 120, today.getMonth())}
+                endMonth={today}
+                disabled={{ after: today }}
+                defaultMonth={preview ?? new Date(today.getFullYear() - 30, today.getMonth())}
               />
-            }
-          >
-            <CalendarBlankIcon aria-hidden="true" />
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="end" sideOffset={8}>
-            <Calendar
-              mode="single"
-              selected={preview}
-              onSelect={(date) => {
-                if (date) {
-                  updateBirth({ date: toBirthDateString(date) });
-                  setText(formatBirthDate(date));
-                  setOpen(false);
-                }
-              }}
-              captionLayout="dropdown"
-              startMonth={new Date(today.getFullYear() - 120, today.getMonth())}
-              endMonth={today}
-              disabled={{ after: today }}
-              defaultMonth={preview ?? new Date(today.getFullYear() - 30, today.getMonth())}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+            </PopoverContent>
+          </Popover>
+        </InputGroupAddon>
+      </InputGroup>
       <FieldError id="chart-date-error" message={error} />
     </div>
   );
@@ -186,7 +183,7 @@ export function ChartTimeField() {
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? "chart-time-error" : undefined}
         onChange={(event) => updateBirth({ time: event.target.value })}
-        className="appearance-none rounded-md [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+        className="appearance-none rounded-md [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none [&::-webkit-calendar-picker-indicator]:[display:none]"
       />
       <FieldError id="chart-time-error" message={error} />
     </div>
