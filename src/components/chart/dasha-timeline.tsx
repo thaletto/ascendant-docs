@@ -45,7 +45,9 @@ function AntardashaTable({ period }: { period: ChartDashaPeriod }) {
             <TableCell className="px-2 py-1">{antar.antardasha}</TableCell>
             <TableCell className="px-2 py-1">{formatDashaDate(antar.start)}</TableCell>
             <TableCell className="px-2 py-1">{formatDashaDate(antar.end)}</TableCell>
-            <TableCell className="px-2 py-1">{formatDashaDuration(antar.start, antar.end)}</TableCell>
+            <TableCell className="px-2 py-1">
+              {formatDashaDuration(antar.start, antar.end)}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

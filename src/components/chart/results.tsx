@@ -94,9 +94,7 @@ function ChartJaiminiTables() {
             </TableRow>
             <TableRow>
               <TableCell>Upapada</TableCell>
-              <TableCell>
-                {result.jaimini.upapada === "" ? "—" : result.jaimini.upapada}
-              </TableCell>
+              <TableCell>{result.jaimini.upapada === "" ? "—" : result.jaimini.upapada}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

@@ -245,7 +245,9 @@ export function ChartProvider({ children }: { children: ReactNode }) {
       setErrors([]);
       setStatus("empty");
       setResult(null);
-      const first = (["name", "date", "time", "place"] as const).find((key) => validation.fields[key]);
+      const first = (["name", "date", "time", "place"] as const).find(
+        (key) => validation.fields[key],
+      );
       if (first !== undefined) {
         queueMicrotask(() => {
           document.getElementById(`chart-${first}`)?.focus();

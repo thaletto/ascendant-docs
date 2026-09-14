@@ -619,9 +619,7 @@ export function buildChartMarkdown(result: ChartResult): string {
     for (const row of result.sav.rows) {
       lines.push(`| ${row.planet} | ${row.points.join(" | ")} | ${row.total} |`);
     }
-    lines.push(
-      `| Total | ${result.sav.signTotals.join(" | ")} | ${result.sav.total} |`,
-    );
+    lines.push(`| Total | ${result.sav.signTotals.join(" | ")} | ${result.sav.total} |`);
   }
   lines.push("", "## KP Chart", "");
   lines.push(`- Ayanamsa: ${result.kp.astroParams.ayanamsa}`);

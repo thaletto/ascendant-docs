@@ -6,7 +6,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { CityPicker } from "@/components/chart/city-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -134,9 +139,7 @@ export function ChartDateField() {
         <InputGroupAddon align="inline-end">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger
-              render={
-                <InputGroupButton size="icon-xs" variant="ghost" aria-label="Select date" />
-              }
+              render={<InputGroupButton size="icon-xs" variant="ghost" aria-label="Select date" />}
             >
               <CalendarBlankIcon aria-hidden="true" />
             </PopoverTrigger>
