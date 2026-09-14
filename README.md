@@ -1,50 +1,44 @@
-<h1 align="center">Ascendant Docs</h1>
-
 <p align="center">
-  <img src="assets/logo.png" alt="Ascendant" width="360" />
+  <img src="assets/wordmark.svg" alt="Ascendant" width="360" />
 </p>
 
-Ascendant Docs is the human-readable documentation site for Ascendant, a
-sidereal astrology calculation engine and its agent workflows.
+This site is the TypeScript documentation for Ascendant: a library for sidereal
+astrology on npm as `astro-ascendant`. You can calculate charts, dashas, yogas,
+Ashtakavarga, and Jaimini results, and you can use those results with coding
+agents.
 
-The engine ships as `astro-ascendant` on npm (Effect-first TypeScript) and
-PyPI (Python), so this site covers both libraries, not Python alone.
-
-It explains how Ascendant calculates and presents sidereal astrology data,
-including sidereal charts, divisional charts, Vimshottari Dasha periods, yogas,
-Ashtakavarga, and a focused Jaimini analysis.
+Python has its own docs in the
+[ascendant repo](https://github.com/thaletto/ascendant/tree/main/docs/content).
 
 ## What you can learn
 
-- How Ascendant's calculation model works
+- How Ascendant calculates a chart, and which defaults it uses
 - The difference between signs, houses, charts, and timing
 - How Parashari, Jaimini, and KP approaches differ
-- How to understand saved person records and agent workflows
-- How to use the TypeScript and Python libraries and choose calculation settings
-- The evidence and safety boundaries for astrology guidance
+- How saved person records work with agent skills
+- How to install the TypeScript library and choose calculation settings
+- What a reading can and cannot claim
 
-## Calculation model
+## How calculations work
 
-Ascendant's documented workflow uses the sidereal zodiac, Lahiri ayanamsa,
-and Whole Sign houses by default. Its interpretation workflow compares selected
-Parashari and Jaimini evidence before considering divisional charts, Vimshottari
-periods, transits, and Ashtakavarga.
+By default Ascendant uses the sidereal zodiac, Krishnamurti ayanamsa, and
+Placidus houses.
 
-The project names its methods explicitly so results can be checked and
-reproduced. A reading is interpretive guidance, not certainty or a substitute
-for medical, legal, or financial advice.
+Methods are named so you can check and repeat a result. A reading is guidance,
+not certainty, and not a substitute for medical, legal, or financial advice.
 
-## Find your way around
+## Docs
 
-- Start with [Getting Started](content/index.md)
-- Browse the [API reference](content/api-reference/chart.md): [Chart](content/api-reference/chart.md),
-  [Dasha](content/api-reference/dasha.md), [Ashtakavarga](content/api-reference/sav.md),
-  [Jaimini](content/api-reference/jaimini.md)
-- Read the project glossary in `CONTEXT.md`
+- [Getting started](content/index.md)
+- [Birth Chart Calculator](content/chart.mdx)
+- API reference: [Chart](content/api-reference/chart.md),
+  [Dasha](content/api-reference/dasha.md), [SAV](content/api-reference/sav.md),
+  [Jaimini](content/api-reference/jaimini.md),
+  [Ephemeris](content/api-reference/ephemeris.md),
+  [AstroParams](content/api-reference/astro-params.md),
+  [Swisseph](content/api-reference/swisseph.md)
+- [Skills and Plugins](content/skills.md)
 
 ## Contributing
 
-Keep explanations plain, name the calculation method being discussed, and
-preserve the distinction between birth data, calculated records, charts,
-timing, and interpretation. When documenting a new behavior, include the
-evidence or source that supports it.
+See [CONTRIBUTION.md](CONTRIBUTION.md).
