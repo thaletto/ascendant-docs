@@ -17,8 +17,8 @@ export function ChartKpTable() {
     return null;
   }
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-muted-foreground text-sm">
+    <div className="flex flex-col gap-1.5">
+      <p className="text-muted-foreground m-0! text-sm">
         Calculated with {result.kp.astroParams.ayanamsa} ayanamsa and{" "}
         {result.kp.astroParams.houseSystem} houses.
       </p>

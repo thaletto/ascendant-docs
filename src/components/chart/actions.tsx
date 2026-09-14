@@ -27,7 +27,12 @@ export function ChartAskClaudeButton() {
     actions: { askClaude },
   } = useChart();
   return (
-    <Button type="button" variant="outline" className="rounded-md" onClick={askClaude}>
+    <Button
+      type="button"
+      variant="outline"
+      className="rounded-md bg-[oklch(0.658_0.113_39.145)] text-white hover:bg-[oklch(0.58_0.113_39.145)] hover:text-white"
+      onClick={askClaude}
+    >
       <ClaudeAI data-icon="inline-start" aria-hidden="true" />
       Ask Claude
     </Button>
