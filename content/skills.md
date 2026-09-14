@@ -1,6 +1,6 @@
 ---
 title: Skills and Plugins
-description: Install the Ascendant skill or plugins into Claude Code, Codex, or any skill-compatible agent.
+description: Install the Ascendant skill or plugins into Claude.ai, Claude Code, Codex, or any skill-compatible agent.
 ---
 
 The Ascendant skill lives in [`thaletto/ascendant-agents`](https://github.com/thaletto/ascendant-agents).
@@ -25,6 +25,18 @@ The skill ships to many harnesses from a single source of truth: `skills/ascenda
 ## Installation
 
 Pick one installation method. They all install the same skill.
+
+## Claude.ai marketplace
+
+Add the Ascendant marketplace once, then install the skill from it.
+
+1. Open [claude.ai/customize/plugins](https://claude.ai/customize/plugins).
+2. Choose **Add marketplace**.
+3. Select **Repository**.
+4. Enter `thaletto/ascendant-agents` and add it.
+5. From that marketplace, add the **ascendant** skill.
+
+After the skill is installed, start a chat with `/ascendant`.
 
 ## Standalone skill
 

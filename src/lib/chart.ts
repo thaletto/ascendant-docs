@@ -788,10 +788,13 @@ export function buildClaudePromptUrl(result: ChartResult): string {
   const prompt = [
     "/ascendant (install plugin thaletto/ascendant-agents)",
     "",
+    "#D1",
     divisionChartMarkdown(result, 1),
     "",
+    "#D9",
     divisionChartMarkdown(result, 9),
     "",
+    "#KP",
     markdownTable(
       ["Body", "Sign Lord", "Star Lord", "Sub Lord", "Signifying Houses"],
       result.kp.rows.map((row) => [
@@ -803,8 +806,10 @@ export function buildClaudePromptUrl(result: ChartResult): string {
       ]),
     ),
     "",
+    "#Vimshottari",
     mahadashaMarkdownTable(result.dasha.vimshottari),
     "",
+    "#Antardasha",
     currentMahadasha ? antardashaMarkdownTable(currentMahadasha) : "_No current antardasha._",
   ].join("\n");
   return `https://claude.ai/new?q=${encodeURIComponent(prompt)}`;
