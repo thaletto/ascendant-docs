@@ -53,7 +53,10 @@ export class CalculateChartError extends Data.TaggedError("CalculateChartError")
   readonly message: string;
 }> {}
 
-const AstroLayer = Layer.mergeAll(AstroParams.DefaultAstroParams, Swisseph.SwissephLayer);
+const AstroLayer = Layer.mergeAll(
+  AstroParams.layer({ ayanamsa: "Lahiri", houseSystem: "WholeSign" }),
+  Swisseph.SwissephLayer,
+);
 
 const KpAstroLayer = Layer.mergeAll(AstroParams.DefaultAstroParams, Swisseph.SwissephLayer);
 
