@@ -1,4 +1,4 @@
 {
   "title": "API reference",
-  "pages": ["astro-params", "chart", "dasha", "ephemeris", "jaimini", "sav", "swisseph"]
+  "pages": ["astro-params", "chart", "dasha", "ephemeris", "jaimini", "sav", "swisseph", "transit"]
 }
