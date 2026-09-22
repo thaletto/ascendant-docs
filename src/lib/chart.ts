@@ -790,6 +790,7 @@ export function buildClaudePromptUrl(result: ChartResult): string {
   const prompt = [
     "/ascendant (install plugin thaletto/ascendant-agents)",
     "",
+    ...(result.birth.name.trim() !== "" ? [`Name: ${result.birth.name}`, ""] : []),
     "#D1",
     divisionChartMarkdown(result, 1),
     "",
