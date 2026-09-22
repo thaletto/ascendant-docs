@@ -267,6 +267,7 @@ export function ChartProvider({ children }: { children: ReactNode }) {
           latitude: birth.latitude,
           longitude: birth.longitude,
           place: birth.place,
+          name: birth.name.trim(),
           ...(birth.sex ? { sex: birth.sex } : {}),
         }),
       });
@@ -291,6 +292,7 @@ export function ChartProvider({ children }: { children: ReactNode }) {
         saveBirthProfiles(next);
       }
     } catch (error) {
+      console.error(error);
       setResult(null);
       setStatus("failure");
       setErrors(["Unable to calculate the chart. Check your connection and try again."]);

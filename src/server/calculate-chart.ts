@@ -46,6 +46,7 @@ export interface CalculateChartInput {
   readonly latitude: number;
   readonly longitude: number;
   readonly place: string;
+  readonly name?: string;
   readonly sex?: "Male" | "Female";
 }
 
@@ -390,6 +391,7 @@ export function calculateChart(
 
     const result: ChartResult = {
       birth: {
+        name: input.name ?? "",
         utcIso: input.utcIso,
         place: input.place,
         latitude: input.latitude,

@@ -18,6 +18,7 @@ export const Route = createFileRoute("/api/chart")({
         const latitude = input.latitude;
         const longitude = input.longitude;
         const place = typeof input.place === "string" ? input.place : "";
+        const name = typeof input.name === "string" ? input.name : "";
         const sex = input.sex === "Male" || input.sex === "Female" ? input.sex : undefined;
         if (utcIso === "" || Number.isNaN(Date.parse(utcIso))) {
           return Response.json({ error: "utcIso must be an ISO date string." }, { status: 400 });
@@ -48,7 +49,7 @@ export const Route = createFileRoute("/api/chart")({
           // src/server/calculate-chart.ts with static typed imports; the
           // client only sees the JSON contract in src/lib/chart.ts.
           const result = await Effect.runPromise(
-            calculateChart({ utcIso, latitude, longitude, place, sex }),
+            calculateChart({ utcIso, latitude, longitude, place, name, sex }),
           );
           return Response.json(result);
         } catch (error) {

@@ -108,6 +108,7 @@ export interface KpChart {
 
 export interface ChartResult {
   birth: {
+    name: string;
     utcIso: string;
     place: string;
     latitude: number;
@@ -547,6 +548,7 @@ export function buildChartMarkdown(result: ChartResult): string {
   const lines: string[] = [
     "# Birth Chart",
     "",
+    ...(result.birth.name.trim() !== "" ? [`- Name: ${result.birth.name}`] : []),
     `- Place: ${result.birth.place}`,
     `- UTC: ${result.birth.utcIso}`,
     `- Coordinates: ${result.birth.latitude}, ${result.birth.longitude}`,
