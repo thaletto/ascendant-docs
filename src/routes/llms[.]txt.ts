@@ -5,8 +5,8 @@ import { llms } from "fumadocs-core/source";
 export const Route = createFileRoute("/llms.txt")({
   server: {
     handlers: {
-      GET() {
-        return new Response(llms(source).index());
+      GET: async () => {
+        return new Response(await llms(source).index());
       },
     },
   },
