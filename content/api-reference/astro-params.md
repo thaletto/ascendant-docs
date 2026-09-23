@@ -26,14 +26,14 @@ BunRuntime.runMain(runnable);
 
 ## Exports
 
-| Export               | Description                                                                                      |
-| -------------------- | ------------------------------------------------------------------------------------------------ |
-| `Ayanamsa`           | Schema and type for the supported sidereal ayanamsas                                             |
-| `HouseSystem`        | Schema and type for supported house systems                                                      |
-| `Options`            | `{ ayanamsa, houseSystem }` configuration object                                                 |
-| `AstroParams`        | Effect service consumed by chart generation                                                      |
-| `layer(options)`     | Builds a layer providing the supplied configuration                                              |
-| `DefaultAstroParams` | Krishnamurti ayanamsa with Placidus houses (library default; pass explicit options to change it) |
+| Export               | Description                                                                                           |
+| -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `Ayanamsa`           | Schema and type for the supported sidereal ayanamsas                                                  |
+| `HouseSystem`        | Schema and type for supported house systems                                                           |
+| `Options`            | `{ ayanamsa, houseSystem }` configuration object                                                      |
+| `AstroParams`        | Effect service consumed by chart generation                                                           |
+| `layer(options)`     | Builds a layer providing the supplied configuration                                                   |
+| `DefaultAstroParams` | KrishnamurtiVP291 ayanamsa with Placidus houses (library default; pass explicit options to change it) |
 
 Supported house systems:
 
@@ -92,5 +92,13 @@ Supported ayanamsas:
 - `DhruvaGalCenterMulaWilhelm`
 - `Aryabhata522`
 - `BabylBritton`
+- `TrueSheoran`
+- `GalacticCenterCochrane`
+- `GalacticEquatorFiorenza`
+- `ValensMoon`
+- `Lahiri1940`
+- `LahiriVP285`
+- `KrishnamurtiVP291`
+- `LahiriICRC`
 
 Use the schema as the authoritative list when presenting a selection to users.
