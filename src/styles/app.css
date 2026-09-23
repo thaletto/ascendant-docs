@@ -16,7 +16,6 @@
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-serif: "Libre Baskerville", Georgia, serif;
   --font-heading: var(--font-sans);
-  --font-hand: var(--font-sans);
 
   --gray-1: #fcfcfc;
   --gray-2: #f6f6f6;
@@ -63,23 +62,7 @@
 
   --paper: #f9f8f5;
   --paper-ink: #6b6961;
-  --paper-soft: var(--gray-2);
-  --ink: var(--foreground);
-  --ink-soft: var(--muted-foreground);
   --grain-opacity: 0.3;
-
-  /* legacy aliases so existing classes keep working */
-  --landing-paper: var(--background);
-  --landing-ink: var(--foreground);
-  --landing-cream: var(--background);
-  --celestial: var(--signal);
-  --celestial-soft: var(--gray-5);
-  --gold: var(--signal);
-  --cosmos: var(--foreground);
-  --rule: var(--border);
-  --night: var(--gray-12);
-  --night-raised: var(--gray-11);
-  --night-ink: var(--gray-1);
 
   --radius: 0.625rem;
   --border-hairline: 0.5px;
@@ -164,22 +147,7 @@
 
   --paper: #101010;
   --paper-ink: var(--muted-foreground);
-  --paper-soft: var(--gray-2);
-  --ink: var(--foreground);
-  --ink-soft: var(--muted-foreground);
   --grain-opacity: 0.22;
-
-  --landing-paper: var(--background);
-  --landing-ink: var(--foreground);
-  --landing-cream: var(--background);
-  --celestial: var(--signal);
-  --celestial-soft: var(--gray-6);
-  --gold: var(--signal);
-  --cosmos: var(--foreground);
-  --rule: var(--border);
-  --night: var(--background);
-  --night-raised: var(--card);
-  --night-ink: var(--foreground);
 
   --sidebar: #171717;
   --sidebar-foreground: #fafafa;
@@ -256,15 +224,8 @@ body {
 @theme inline {
   --color-signal: var(--signal);
   --color-paper: var(--paper);
-  --color-landing-paper: var(--landing-paper);
-  --color-landing-ink: var(--landing-ink);
-  --color-landing-cream: var(--landing-cream);
-  --color-celestial: var(--celestial);
-  --color-celestial-soft: var(--celestial-soft);
-  --color-cosmos: var(--cosmos);
   --font-sans: "Inter Variable", Inter, system-ui, sans-serif;
   --font-heading: var(--font-sans);
-  --font-hand: var(--font-sans);
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-serif: "Libre Baskerville", Georgia, serif;
   --color-gray-1: var(--gray-1);
