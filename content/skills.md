@@ -38,7 +38,7 @@ Add the Ascendant marketplace once, then install the skill from it.
 
 After the skill is installed, start a chat with `/ascendant`.
 
-## skills.sh
+### skills.sh
 
 From the working directory where you want to use Ascendant, run:
 
