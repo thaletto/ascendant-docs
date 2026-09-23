@@ -24,7 +24,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-router": "1.170.36",
     "@tanstack/react-start": "1.168.53",
-    "astro-ascendant": "^2.0.0",
+    "astro-ascendant": "^3.2.0",
     "chrono-node": "^2.10.1",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",

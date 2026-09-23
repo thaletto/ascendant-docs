@@ -16,7 +16,7 @@ bun add astro-ascendant effect@rc
 
 ## 1. Import the packages
 
-This example uses Bun, Krishnamurti ayanamsa, and Placidus houses
+This example uses Bun, KrishnamurtiVP291 ayanamsa, and Placidus houses
 (`AstroParams.DefaultAstroParams`).
 
 ```ts

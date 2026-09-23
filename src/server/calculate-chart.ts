@@ -17,6 +17,7 @@ import {
   uniqueHousesInOrder,
   type ChartDashaPeriod,
   type ChartResult,
+  type KpCuspRow,
   type KpSignificatorRow,
 } from "@/lib/chart";
 
@@ -99,6 +100,67 @@ const VIMSHOTTARI_YEARS: Record<(typeof NAKSHATRA_LORD_CYCLE)[number], number> =
 
 function normalizeLongitude(longitude: number): number {
   return ((longitude % 360) + 360) % 360;
+}
+
+const KP_SIGN_LORDS = [
+  "Mars",
+  "Venus",
+  "Mercury",
+  "Moon",
+  "Sun",
+  "Mercury",
+  "Venus",
+  "Mars",
+  "Jupiter",
+  "Saturn",
+  "Saturn",
+  "Jupiter",
+] as const;
+
+function kpSignLordOf(longitude: number): string {
+  const signIndex = Math.floor(normalizeLongitude(longitude) / 30);
+  return KP_SIGN_LORDS[signIndex] ?? "";
+}
+
+function kpStarLordOf(longitude: number): string {
+  const position = normalizeLongitude(longitude);
+  const starIndex = Math.floor(position / NAKSHATRA_SPAN) % NAKSHATRA_LORD_CYCLE.length;
+  return NAKSHATRA_LORD_CYCLE[starIndex] ?? "";
+}
+
+function kpLordFromProportion(position: number, startLord: string): string {
+  const start = NAKSHATRA_LORD_CYCLE.indexOf(startLord as (typeof NAKSHATRA_LORD_CYCLE)[number]);
+  const cycleStart = start === -1 ? 0 : start;
+  let elapsed = 0;
+  for (let offset = 0; offset < NAKSHATRA_LORD_CYCLE.length; offset += 1) {
+    const planet =
+      NAKSHATRA_LORD_CYCLE[(cycleStart + offset) % NAKSHATRA_LORD_CYCLE.length] ?? startLord;
+    const width = VIMSHOTTARI_YEARS[planet as keyof typeof VIMSHOTTARI_YEARS] / 120;
+    if (position < elapsed + width) {
+      return planet;
+    }
+    elapsed += width;
+  }
+  return startLord;
+}
+
+function kpSubSubLordOf(longitude: number): string {
+  const position = normalizeLongitude(longitude);
+  const offsetInStar = (position % NAKSHATRA_SPAN) / NAKSHATRA_SPAN;
+  const starLord = kpStarLordOf(longitude);
+  const start = NAKSHATRA_LORD_CYCLE.indexOf(starLord as (typeof NAKSHATRA_LORD_CYCLE)[number]);
+  const cycleStart = start === -1 ? 0 : start;
+  let elapsed = 0;
+  for (let offset = 0; offset < NAKSHATRA_LORD_CYCLE.length; offset += 1) {
+    const planet =
+      NAKSHATRA_LORD_CYCLE[(cycleStart + offset) % NAKSHATRA_LORD_CYCLE.length] ?? starLord;
+    const span = VIMSHOTTARI_YEARS[planet as keyof typeof VIMSHOTTARI_YEARS] / 120;
+    if (offsetInStar < elapsed + span) {
+      return kpLordFromProportion((offsetInStar - elapsed) / span, planet);
+    }
+    elapsed += span;
+  }
+  return starLord;
 }
 
 function kpSubLord(longitude: number): string {
@@ -315,12 +377,38 @@ function readKpChart(calculation: Chart.ChartCalculation): ChartResult["kp"] {
     });
   }
 
+  const cusps: KpCuspRow[] = HOUSES.map((houseNumber) => {
+    const house = d1.houses[houseNumber];
+    const cusp = house.cusp;
+    if (cusp === undefined) {
+      return {
+        house: houseNumber,
+        sign: house.sign,
+        degree: "",
+        signLord: house.signLord ?? "",
+        starLord: house.starLord ?? "",
+        subLord: house.subLord ?? "",
+        subSubLord: "",
+      };
+    }
+    return {
+      house: houseNumber,
+      sign: house.sign,
+      degree: degreeInSign(cusp),
+      signLord: kpSignLordOf(cusp),
+      starLord: kpStarLordOf(cusp),
+      subLord: kpSubLord(cusp),
+      subSubLord: kpSubSubLordOf(cusp),
+    };
+  });
+
   return {
     astroParams: {
       ayanamsa: calculation.astroParams.ayanamsa,
       houseSystem: calculation.astroParams.houseSystem,
     },
     rows,
+    cusps,
   };
 }
 

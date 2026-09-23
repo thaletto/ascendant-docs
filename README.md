@@ -21,7 +21,7 @@ Python has its own docs in the
 
 ## How calculations work
 
-By default Ascendant uses the sidereal zodiac, Krishnamurti ayanamsa, and
+By default Ascendant uses the sidereal zodiac, KrishnamurtiVP291 ayanamsa, and
 Placidus houses.
 
 Methods are named so you can check and repeat a result. A reading is guidance,
