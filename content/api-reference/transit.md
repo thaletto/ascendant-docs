@@ -11,9 +11,7 @@ interpretation here.
 ```ts
 import { Effect } from "effect";
 
-import { AstroParams } from "astro-ascendant/astro-params";
-import * as Transit from "astro-ascendant/transit";
-import { SwissephLayer } from "astro-ascendant/swisseph";
+import { AstroParams, Transit, Swisseph } from "astro-ascendant";
 
 const ingresses = await Effect.runPromise(
   Transit.findTransits({
@@ -25,7 +23,7 @@ const ingresses = await Effect.runPromise(
     maxYears: 12,
   }).pipe(
     Effect.provide(AstroParams.layer({ ayanamsa: "Lahiri", houseSystem: "WholeSign" })),
-    Effect.provide(SwissephLayer),
+    Effect.provide(Swisseph.SwissephLayer),
   ),
 );
 ```
