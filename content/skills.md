@@ -3,30 +3,30 @@ title: Skills and Plugins
 description: Install the Ascendant skill or plugins into Claude.ai, Claude Code, Codex, or any skill-compatible agent.
 ---
 
-The Ascendant skill lives in [`thaletto/ascendant-agents`](https://github.com/thaletto/ascendant-agents).
-It turns a saved birth record into evidence-backed Vedic astrology readings.
+## Overview
 
-## What
+The **ascendant** skill turns a saved person record and fixed astrological
+methods into a deterministic procedure the agent follows. The person record
+(`persons/<name>/`) is the source of truth for birth data and chart evidence:
+the skill reads it, never re-derives or guesses it. Methods come from the
+bundled KP and Parashari guidebooks (KP predominantly, for timing and yes/no
+questions; Parashari for promise, quality, yogas, and vargas), with one school
+per answer and a provenance check (`school`, `ayanamsa`, `houseSystem`,
+`dashaSystem`) before any placement is used.
 
-The skill has three arguments:
+This targets three common failures in AI astrology:
 
-- `init` creates or refreshes a reusable `persons/<name>/` record (chart, dasha, Ashtakavarga, Jaimini artifacts) from exact birth data;
-- `setup` installs calculation dependencies, smfs, and the `persons/` mount once per working directory;
-- `analysis` answers a reading or timing question from the saved record, grounding claims in stored charts and method references (KP for timing/yes-no, Parashari for promise/quality/synthesis).
-
-With no argument it infers one: birth data means `init`, a missing `persons/` means `setup`, a life question means `analysis`.
-
-## Why
-
-Readings stay consistent because three things are separated: deterministic calculations (same Located Moment always yields the same Placements and charts), durable person memory (`persons/<name>/MEMORY.md` accumulates only confirmed events), and guidebook method (local KP/Parashari references searched per query). Interpretations never substitute for stored evidence.
-
-The skill ships to many harnesses from a single source of truth: `skills/ascendant/SKILL.src.md` plus the skill subtrees. Setup is documented next to the skill in [`skills/ascendant/instructions/setup.md`](https://github.com/thaletto/ascendant-agents/blob/main/skills/ascendant/instructions/setup.md). It accepts Bun or Node with npm, installs calculation dependencies in the agent's current working directory without saving them to an existing package manifest or writing a lockfile, and never changes person records.
+- **Data mismatch**: every claim cites a chart file (`path:field`), so
+  judgments trace to stored evidence rather than recalled positions.
+- **Method mix-up**: KP placements are never read with Parashari rules in
+  one judgment; each answer names its school once at the top.
+- **Data unavailability**: when evidence is missing or conflicts block
+  judgment, the skill outputs `Insufficient evidence: run init or attach X`
+  instead of hedging.
 
 ## Installation
 
-Pick one installation method. They all install the same skill.
-
-## Claude.ai marketplace
+### Claude.ai marketplace
 
 Add the Ascendant marketplace once, then install the skill from it.
 
@@ -38,7 +38,7 @@ Add the Ascendant marketplace once, then install the skill from it.
 
 After the skill is installed, start a chat with `/ascendant`.
 
-## Standalone skill
+## skills.sh
 
 From the working directory where you want to use Ascendant, run:
 
@@ -48,7 +48,7 @@ npx skills add thaletto/ascendant-agents
 
 Choose the agent or agents that should receive the skill when prompted.
 
-## Claude Code plugin
+### Claude Code plugin
 
 Run these commands inside Claude Code:
 
@@ -58,7 +58,7 @@ Run these commands inside Claude Code:
 /reload-plugins
 ```
 
-## Codex plugin
+### Codex plugin
 
 Run:
 
@@ -69,7 +69,7 @@ codex plugin add ascendant@ascendant
 
 Start a new Codex task after installation so the skill is loaded.
 
-## Other harnesses
+### Other harnesses
 
 Every directory below in [`thaletto/ascendant-agents`](https://github.com/thaletto/ascendant-agents) contains a ready-to-use `skills/ascendant/` copy. Copy it into the matching directory of your project root:
 
@@ -92,30 +92,3 @@ Every directory below in [`thaletto/ascendant-agents`](https://github.com/thalet
 | Grok Build              | `.grok/skills/ascendant/`                                                                                 |
 | Antigravity             | `.agent/skills/ascendant/`                                                                                |
 | Hermes Agent            | `.hermes/skills/ascendant/`                                                                               |
-
-## After install
-
-The skill works from a saved person record in the agent's current working
-directory. On first use the agent runs the skill's one-time setup there, then
-asks for the birth data it needs: name, exact ISO 8601 birth moment (with `Z`
-or offset), latitude, and longitude.
-
-## Verify a local checkout
-
-To verify the skill source itself, clone
-[`thaletto/ascendant-agents`](https://github.com/thaletto/ascendant-agents)
-and run:
-
-```bash
-bun install --frozen-lockfile
-bun run typecheck
-```
-
-Or, with Node 22.6+:
-
-```bash
-npm install
-npm run typecheck
-```
-
-Regenerate skill copies after editing the source with `make build-skill` (or `npm run build:skill`).
