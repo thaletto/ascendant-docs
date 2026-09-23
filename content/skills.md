@@ -81,7 +81,7 @@ Every directory below in [`thaletto/ascendant-agents`](https://github.com/thalet
 | Codex CLI (repo skills) | `.agents/skills/ascendant/`                                                                               |
 | GitHub Copilot          | `.github/skills/ascendant/`                                                                               |
 | Kiro                    | `.kiro/skills/ascendant/`                                                                                 |
-| OpenCode                | `.opencode/skills/ascendant/` (plus `.opencode/commands/ascendant.md` for the `/ascendant` slash command) |
+| OpenCode                | `.opencode/skills/ascendant/`                                                                             |
 | Pi                      | `.pi/skills/ascendant/`                                                                                   |
 | Qoder                   | `.qoder/skills/ascendant/`                                                                                |
 | Trae                    | `.trae/skills/ascendant/`                                                                                 |
