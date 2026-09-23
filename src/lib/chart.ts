@@ -98,12 +98,23 @@ export interface KpSignificatorRow {
   signifyingHouses: number[];
 }
 
+export interface KpCuspRow {
+  house: number;
+  sign: string;
+  degree: string;
+  signLord: string;
+  starLord: string;
+  subLord: string;
+  subSubLord: string;
+}
+
 export interface KpChart {
   astroParams: {
     ayanamsa: string;
     houseSystem: string;
   };
   rows: KpSignificatorRow[];
+  cusps: KpCuspRow[];
 }
 
 export interface ChartResult {
@@ -634,6 +645,14 @@ export function buildChartMarkdown(result: ChartResult): string {
       `| ${row.name} | ${row.signLord} | ${row.starLord} | ${row.subLord} | ${formatSignifyingHouses(row.signifyingHouses)} |`,
     );
   }
+  lines.push("", "### KP House Cusps", "");
+  lines.push("| House | Sign | Cusp | Sign Lord | Star Lord | Sub Lord | Sub-Sub Lord |");
+  lines.push("| --- | --- | --- | --- | --- | --- | --- |");
+  for (const cusp of result.kp.cusps ?? []) {
+    lines.push(
+      `| ${cusp.house} | ${cusp.sign} | ${cusp.degree} | ${cusp.signLord} | ${cusp.starLord} | ${cusp.subLord} | ${cusp.subSubLord} |`,
+    );
+  }
   lines.push(
     "",
     "This chart is interpretive guidance, not certainty or a substitute for medical, legal, or financial advice.",
@@ -806,6 +825,20 @@ export function buildClaudePromptUrl(result: ChartResult): string {
         row.starLord,
         row.subLord,
         formatSignifyingHouses(row.signifyingHouses),
+      ]),
+    ),
+    "",
+    "#KP Cusps",
+    markdownTable(
+      ["House", "Sign", "Cusp", "Sign Lord", "Star Lord", "Sub Lord", "Sub-Sub Lord"],
+      (result.kp.cusps ?? []).map((cusp) => [
+        String(cusp.house),
+        cusp.sign,
+        cusp.degree,
+        cusp.signLord,
+        cusp.starLord,
+        cusp.subLord,
+        cusp.subSubLord,
       ]),
     ),
     "",
