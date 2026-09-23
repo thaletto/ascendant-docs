@@ -8,52 +8,105 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   return (
-    <main className="bg-landing flex min-h-screen flex-col p-6 text-landing-ink antialiased sm:p-10">
-      <div className="mx-auto w-full max-w-md lg:max-w-6xl">
+    <main className="bg-background text-foreground flex min-h-screen flex-col pb-20 antialiased">
+      <div aria-hidden="true" className="paper-grain" />
+      <div className="mx-auto w-full max-w-173 flex-1 px-4 pt-14">
         <a href="/" aria-label="Ascendant home" className="inline-block">
           <img src={wordmark} alt="Ascendant" height={32} className="h-8 w-auto" />
         </a>
-      </div>
 
-      <section
-        aria-label="Ascendant birth chart calculator"
-        className="mx-auto flex w-full max-w-md flex-1 items-center lg:max-w-6xl"
-      >
-        <div className="mt-6 grid w-full items-center gap-6 lg:mt-6 lg:grid-cols-[1fr_1.1fr] lg:gap-10">
-          <div className="order-first overflow-hidden rounded-2xl lg:order-last">
-            <img src={solarSystem} alt="" aria-hidden="true" className="h-auto w-full" />
+        <section aria-label="Ascendant birth chart calculator" className="mt-10">
+          <div className="grid w-full items-start gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-10">
+            <div className="flex flex-col items-start">
+              <h1 className="font-sans text-lg font-medium tracking-tight text-foreground sm:text-xl">
+                Understand your birth chart.
+              </h1>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+                Unlike the broad and vague magazine horoscopes that only use your{" "}
+                <span className="font-serif italic">sun sign</span>, we use a complete picture
+                of the sky when and where you were born to generate your full birth{" "}
+                <span className="font-mono">chart</span>.
+              </p>
+              <div className="mt-6 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+                <Link
+                  to="/docs/$"
+                  params={{ _splat: "chart" }}
+                  className="bg-primary text-primary-foreground w-fit rounded-lg px-5 py-2 text-sm font-medium transition-transform duration-150 ease-out hover:opacity-90 active:scale-[0.96]"
+                >
+                  Generate chart
+                </Link>
+              </div>
+            </div>
+
+            <div className="order-first overflow-hidden rounded-xl outline outline-1 -outline-offset-1 outline-black/10 lg:order-last dark:outline-white/10">
+              <img src={solarSystem} alt="" aria-hidden="true" className="h-auto w-full" />
+            </div>
           </div>
+        </section>
 
-          <div className="flex flex-col items-start gap-6">
-            <h1 className="font-hand text-5xl leading-[1.05] text-balance sm:text-6xl lg:text-7xl">
-              Understand your
-              <br />
-              birth chart.
-            </h1>
-            <p className="max-w-md text-base leading-relaxed text-pretty text-landing-ink/80 sm:text-lg">
-              Unlike the broad and vague magazine horoscopes that only use your sun sign, we use a
-              complete picture of the sky when and where you were born to generate your full birth
-              chart.
-            </p>
-            <div className="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row sm:justify-start">
+        <section className="mt-16 sm:mt-24">
+          <h2 className="section-tag-ruled text-sm font-medium sm:text-base">
+            <span>Docs</span>
+            <span className="section-tag-rule" aria-hidden="true" />
+          </h2>
+          <ul className="mt-2 flex flex-col">
+            <li>
+              <Link
+                to="/docs/$"
+                params={{ _splat: "skills" }}
+                className="group flex flex-wrap items-center gap-2 py-3.5"
+              >
+                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">Skills</span>
+                <span
+                  aria-hidden="true"
+                  className="hidden shrink-0 text-sm text-muted-foreground sm:inline"
+                >
+                  /
+                </span>
+                <span className="min-w-0 basis-full truncate text-sm text-muted-foreground transition-colors duration-150 ease-out group-hover:text-foreground sm:basis-auto sm:flex-1">
+                  Install the skill into Claude, Codex, or any agent
+                </span>
+              </Link>
+            </li>
+            <li>
               <Link
                 to="/docs/$"
                 params={{ _splat: "chart" }}
-                className="w-fit min-w-44 -rotate-1 rounded-2xl border-[3px] border-landing-ink bg-landing-ink px-8 py-2.5 text-center font-hand text-2xl text-landing-cream transition-transform hover:-translate-y-0.5 active:scale-95"
+                className="group flex flex-wrap items-center gap-2 py-3.5"
               >
-                Analyse
+                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">Chart Generator</span>
+                <span
+                  aria-hidden="true"
+                  className="hidden shrink-0 text-sm text-muted-foreground sm:inline"
+                >
+                  /
+                </span>
+                <span className="min-w-0 basis-full truncate text-sm text-muted-foreground transition-colors duration-150 ease-out group-hover:text-foreground sm:basis-auto sm:flex-1">
+                  Generate a full chart from date, time, and place
+                </span>
               </Link>
+            </li>
+            <li>
               <Link
                 to="/docs/$"
-                params={{ _splat: "" }}
-                className="w-fit min-w-44 rotate-1 rounded-2xl border-[3px] border-landing-ink bg-transparent px-8 py-2.5 text-center font-hand text-2xl text-landing-ink transition-transform hover:-translate-y-0.5 active:scale-95"
+                params={{ _splat: "api-reference/chart" }}
+                className="group flex flex-wrap items-center gap-2 py-3.5"
               >
-                Docs
+                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">API</span>
+                <span
+                  aria-hidden="true"
+                  className="hidden shrink-0 text-sm text-muted-foreground sm:inline"
+                >
+                  /
+                </span>
+                <span className="min-w-0 basis-full truncate text-sm text-muted-foreground transition-colors duration-150 ease-out group-hover:text-foreground sm:basis-auto sm:flex-1">
+                  Effect services for charts, dashas, and transits
+                </span>
               </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+            </li>
+          </ul>
+        </section>
+      </div>
     </main>
   );
 }
