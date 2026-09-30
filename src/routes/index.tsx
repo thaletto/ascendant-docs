@@ -38,7 +38,7 @@ function LandingPage() {
               </div>
             </div>
 
-            <div className="order-first overflow-hidden rounded-xl outline outline-1 -outline-offset-1 outline-black/10 lg:order-last dark:outline-white/10">
+            <div className="order-first lg:order-last">
               <img src={solarSystem} alt="" aria-hidden="true" className="h-auto w-full" />
             </div>
           </div>
