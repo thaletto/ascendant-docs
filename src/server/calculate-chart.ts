@@ -295,10 +295,10 @@ function readDivisions(
           sign: planet.sign.name,
           degree: formatDegree(planet.degree, planet.longitude),
           house: planetHouse.get(planet.name) ?? 0,
-          // Nakshatra and pada are source (D1) evidence; divisional charts
+          // Star and pada are source (D1) evidence; divisional charts
           // reuse projected signs and houses, so only D1 rows carry them.
-          nakshatra: isSourceDivision ? (source?.nakshatra.name ?? "") : "",
-          pada: isSourceDivision ? (source?.nakshatra.pada ?? null) : null,
+          star: isSourceDivision ? (source?.star.name ?? "") : "",
+          pada: isSourceDivision ? (source?.star.pada ?? null) : null,
           state: planet.is_retrograde ? "Retrograde" : dignityLabel(planet.in_sign),
         };
       }),
@@ -371,7 +371,7 @@ function readKpChart(calculation: Chart.ChartCalculation): ChartResult["kp"] {
     rows.push({
       name,
       signLord: planet?.sign.lord ?? "",
-      starLord: source?.nakshatra.lord ?? "",
+      starLord: source?.star.lord ?? "",
       subLord: planet === undefined ? "" : kpSubLord(planet.longitude),
       signifyingHouses: signifyingHousesOf(planetSignification(d1, name)),
     });

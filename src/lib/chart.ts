@@ -63,7 +63,7 @@ export interface ChartPlacement {
   sign: string;
   degree: string;
   house: number;
-  nakshatra: string;
+  star: string;
   pada: number | null;
   state: string;
 }
@@ -190,7 +190,7 @@ export function toPlacementRows(result: ChartResult, division: number): ChartPla
       sign: result.lagna.sign,
       degree: result.lagna.degree,
       house: result.lagna.house,
-      nakshatra: "",
+      star: "",
       pada: null,
       state: "",
     },
@@ -569,12 +569,12 @@ export function buildChartMarkdown(result: ChartResult): string {
     "",
     "## Placements",
     "",
-    "| Body | Sign | Degree | House | Nakshatra | State |",
+    "| Body | Sign | Degree | House | Star | State |",
     "| --- | --- | --- | --- | --- | --- |",
   ];
   for (const row of toPlacementRows(result, 1)) {
     lines.push(
-      `| ${row.body} | ${row.sign} | ${row.degree} | ${row.house} | ${row.nakshatra}${row.pada === null ? "" : ` ${row.pada}`} | ${row.state} |`,
+      `| ${row.body} | ${row.sign} | ${row.degree} | ${row.house} | ${row.star}${row.pada === null ? "" : ` ${row.pada}`} | ${row.state} |`,
     );
   }
   lines.push("", "## Vimshottari Dasha", "");

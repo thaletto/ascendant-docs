@@ -29,7 +29,7 @@ functions `calculate`, `calculateChara`, `calculateSthira`, `at`, and
 
 ```ts
 const vimshottari = yield * Dasha.calculate(moment, placements);
-const current = Dasha.at(vimshottari, moment.date);
+const current = yield * Dasha.at(vimshottari, moment.date);
 ```
 
 ## Functions
@@ -50,9 +50,9 @@ import * as Sthira from "astro-ascendant/dasha/sthira";
 import * as Vimshottari from "astro-ascendant/dasha/vimshottari";
 ```
 
-Each calculator returns an Effect. Query functions are pure and return the
-matching current period (or the module's typed query error when the date is
-outside the timeline).
+Each calculator returns an Effect. Query functions are Effects too: they
+return the matching current period, or `null` when the date is outside the
+timeline. Pass an explicit UTC instant, or omit it to query the current time.
 
 ## Vimshottari models
 

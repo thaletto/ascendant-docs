@@ -57,7 +57,7 @@ Use this when several chart views should share the same placement evidence.
 | `Chart`            | `division`, cusp-aware `houses`, optional angles and significations |
 | `House`            | sign, cusp, lords, planets, and optional Lagna                      |
 | `Planet`           | longitude, degree, retrograde state, dignity, and sign              |
-| `Nakshatra`        | name, lord, and pada                                                |
+| `Star`             | name, lord, and pada                                                |
 | `Sign`             | sign name and classical lord                                        |
 
 `Chart` uses one-directional relationships: a house lists its planets, while a
