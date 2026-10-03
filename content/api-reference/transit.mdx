@@ -1,0 +1,170 @@
+---
+title: Transit
+description: Mechanics-only search for the next or previous transit events of one graha.
+---
+
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+
+The `Transit` namespace searches for the next or previous transit events of
+one graha from a `LocatedMoment`. It is mechanics-only: each event reports
+the exact moment, longitude, kind, and retrograde state. There is no
+interpretation here.
+
+```ts
+import { Effect } from "effect";
+
+import { AstroParams, Transit, Swisseph } from "astro-ascendant";
+
+const ingresses = await Effect.runPromise(
+  Transit.findTransits({
+    planet: "Jupiter",
+    from: locatedMoment,
+    count: 3,
+    direction: "forward",
+    kinds: ["sign-ingress"],
+    maxYears: 12,
+  }).pipe(
+    Effect.provide(AstroParams.layer({ ayanamsa: "Lahiri", houseSystem: "WholeSign" })),
+    Effect.provide(Swisseph.SwissephLayer),
+  ),
+);
+```
+
+## Public exports
+
+```ts
+export * from "./error.js";
+export * from "./model.js";
+export { findTransits } from "./find.js";
+```
+
+`findTransits(request)` is the single entry point. It requires the
+`AstroParams` and `Ephemeris` Effect layers. The low-level sampling helpers
+(`searchRawHits`, `sampleAt`, `normalize360`, and related types) are also
+re-exported for custom search tooling.
+
+## Event kinds
+
+| Kind            | Meaning                                                         | Requires          |
+| --------------- | --------------------------------------------------------------- | ----------------- |
+| `sign-ingress`  | Sidereal D1 Rashi boundary crossing                             | —                 |
+| `longitude-hit` | Exact crossing of `targetLongitude`                             | `targetLongitude` |
+| `cusp-crossing` | Crossing of the natal house cusp for `house` computed at `from` | `house`           |
+| `station`       | Retrograde station, detected via a `longitudeSpeed` sign change | —                 |
+
+Cusp targets are the natal house cusps at `from` under the shared
+`AstroParams`. Charts attach afterwards only when `includeCharts` asks.
+
+## Request fields
+
+<TypeTable
+  type={{
+    planet: {
+      description: 'The single graha to track',
+      type: 'Planets',
+      required: true,
+    },
+    from: {
+      description: 'Starting moment, latitude, and longitude',
+      type: 'LocatedMoment',
+      required: true,
+    },
+    count: {
+      description: 'Number of events to return (1–100)',
+      type: 'number',
+      required: true,
+    },
+    direction: {
+      description: 'Search direction in time',
+      type: '"forward" | "backward"',
+      required: true,
+    },
+    kinds: {
+      description: 'Which event kinds to match (non-empty)',
+      type: 'TransitKind[]',
+      required: true,
+    },
+    targetLongitude: {
+      description: 'Required for longitude-hit',
+      type: 'Longitude',
+    },
+    house: {
+      description: 'Required for cusp-crossing (1–12)',
+      type: 'Houses',
+    },
+    maxYears: {
+      description: 'Search window in years (0 exclusive–200)',
+      type: 'number',
+      default: 30,
+    },
+    precisionMinutes: {
+      description: 'Refinement precision in minutes (0 exclusive–1440)',
+      type: 'number',
+      default: 1,
+    },
+    includeCharts: {
+      description: 'Attaches one full ChartCalculation per found moment when set',
+      type: 'Division[]',
+    },
+  }}
+/>
+
+## Result and guarantees
+
+Each `TransitEvent` contains:
+
+<TypeTable
+  type={{
+    planet: {
+      description: 'The tracked graha',
+      type: 'Planets',
+      required: true,
+    },
+    moment: {
+      description: 'Exact UTC moment of the event',
+      type: 'DateTime',
+      required: true,
+    },
+    longitude: {
+      description: 'Sidereal longitude at the event',
+      type: 'Longitude',
+      required: true,
+    },
+    kind: {
+      description: 'Which event kind matched',
+      type: 'TransitKind',
+      required: true,
+    },
+    sign: {
+      description: 'D1 sign, present on ingress events',
+      type: 'Rashis',
+    },
+    is_retrograde: {
+      description: 'Retrograde state at the event',
+      type: 'boolean',
+      required: true,
+    },
+    direction: {
+      description: 'Search direction that found the event',
+      type: '"forward" | "backward"',
+      required: true,
+    },
+    provenance: {
+      description: 'Versioned calculation method',
+      type: '{ school: "Ascendant", method: "transit-sample-bisect", version: 1 }',
+      required: true,
+    },
+    calculation: {
+      description: 'Full chart calculation, only when includeCharts requested divisions',
+      type: 'ChartCalculation',
+    },
+  }}
+/>
+
+- Every zero-crossing counts in strict time order, so retrograde triples
+  yield three events.
+- Refinement bisects to `precisionMinutes` (default `1`).
+- An exhausted `maxYears` window fails with typed `TransitSearchExhausted`
+  (carrying the partial `found` events and `searchedUntil`) instead of a
+  short list.
+- Invalid requests fail with typed `TransitValidationError`.

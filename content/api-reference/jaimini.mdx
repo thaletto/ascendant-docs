@@ -3,6 +3,8 @@ title: Jaimini
 description: Jaimini calculations for Chara Karakas, Rashi Drishti, Karakamsha, Arudha Pada, Upapada, and Argala.
 ---
 
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+
 Ascendant exposes each Jaimini calculation as an independent root subpath.
 They consume `Chart.Placements` unless noted otherwise and return typed Effect
 results.
@@ -30,6 +32,40 @@ import {
 ```
 
 ## Input conventions
+
+### `ArudhaPada.calculate(placements, house)`
+
+<TypeTable
+  type={{
+    placements: {
+      description: 'Shared sidereal placements',
+      type: 'Placements',
+      required: true,
+    },
+    house: {
+      description: 'House number to project',
+      type: '1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12',
+      required: true,
+    },
+  }}
+/>
+
+### `Argala.calculate(placements, reference)`
+
+<TypeTable
+  type={{
+    placements: {
+      description: 'Shared sidereal placements',
+      type: 'Placements',
+      required: true,
+    },
+    reference: {
+      description: 'Sign reference, or Ketu for reverse directional counting; do not substitute a generic planet reference',
+      type: '{ kind: "Sign", sign: Rashis } | { kind: "Ketu" }',
+      required: true,
+    },
+  }}
+/>
 
 `RashiDrishti.calculate` accepts one of the twelve sign names directly.
 `ArudhaPada.calculate` accepts a house number from `1` through `12`.

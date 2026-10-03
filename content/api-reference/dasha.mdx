@@ -3,6 +3,8 @@ title: Dasha
 description: Vimshottari, Chara, and Sthira dasha calculations and queries.
 ---
 
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+
 The `Dasha` namespace calculates planetary Vimshottari periods and sign-based
 Jaimini Chara and Sthira periods. All dasha calculators consume a `Moment` and
 shared `Placements`.
@@ -56,19 +58,108 @@ timeline. Pass an explicit UTC instant, or omit it to query the current time.
 
 ## Vimshottari models
 
-- `VimshottariDasha` is an array of `MahaDasha` values.
-- `MahaDasha` contains `mahadasha`, `start`, `end`, and `antardashas`.
-- `AntarDasha` contains the parent and child planets plus `start` and `end`.
-- `CurrentDasha` contains the active `mahadasha` and `antardasha`.
+### `MahaDasha`
+
+<TypeTable
+  type={{
+    mahadasha: {
+      description: 'Ruling planet of the major period',
+      type: 'Planets',
+      required: true,
+    },
+    start: {
+      description: 'UTC start of the major period',
+      type: 'DateTime',
+      required: true,
+    },
+    end: {
+      description: 'UTC end of the major period',
+      type: 'DateTime',
+      required: true,
+    },
+    antardashas: {
+      description: 'Child AntarDasha periods (parent and child planets plus start and end)',
+      type: 'AntarDasha[]',
+      required: true,
+    },
+  }}
+/>
+
+### `CurrentDasha`
+
+<TypeTable
+  type={{
+    mahadasha: {
+      description: 'Active major period',
+      type: 'MahaDasha',
+      required: true,
+    },
+    antardasha: {
+      description: 'Active sub-period within it',
+      type: 'AntarDasha',
+      required: true,
+    },
+  }}
+/>
+
+`VimshottariDasha` is an array of `MahaDasha` values. `CurrentDasha` is the
+result of `at`.
 
 ## Rashi dasha models
 
-- `CharaDasha` and `SthiraDasha` identify the system, provenance, and
-  `RashiMahaDasha` timeline.
-- `RashiMahaDasha` and `RashiAntarDasha` use signs instead of planets.
-- `CurrentRashiDasha` is the result of `atRashi`.
-- `SthiraDasha` additionally includes `Brahma` and its `BrahmaSelection`.
-  Selection evidence includes Rashi Bala and candidate scores.
+### `RashiMahaDasha`
+
+<TypeTable
+  type={{
+    mahadasha: {
+      description: 'Ruling sign of the major period',
+      type: 'Rashis',
+      required: true,
+    },
+    start: {
+      description: 'UTC start of the major period',
+      type: 'DateTime',
+      required: true,
+    },
+    end: {
+      description: 'UTC end of the major period',
+      type: 'DateTime',
+      required: true,
+    },
+    antardashas: {
+      description: 'Child RashiAntarDasha periods (parent and child signs plus start and end)',
+      type: 'RashiAntarDasha[]',
+      required: true,
+    },
+  }}
+/>
+
+### `CurrentRashiDasha`
+
+<TypeTable
+  type={{
+    system: {
+      description: 'Which sign-dasha system produced the result',
+      type: '"Chara" | "Sthira"',
+      required: true,
+    },
+    mahadasha: {
+      description: 'Active major period',
+      type: 'RashiMahaDasha',
+      required: true,
+    },
+    antardasha: {
+      description: 'Active sub-period within it',
+      type: 'RashiAntarDasha',
+      required: true,
+    },
+  }}
+/>
+
+`CharaDasha` and `SthiraDasha` identify the system, provenance, and
+`RashiMahaDasha` timeline.
+`SthiraDasha` additionally includes `Brahma` and its `BrahmaSelection`.
+Selection evidence includes Rashi Bala and candidate scores.
 
 Dates are UTC `DateTime` values. Dasha provenance is recorded on Chara and
 Sthira results so consumers can identify the versioned calculation method.

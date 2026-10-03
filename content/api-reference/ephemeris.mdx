@@ -1,0 +1,144 @@
+---
+title: Ephemeris
+description: Ephemeris service contract and runtime-neutral position models.
+---
+
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+
+`Ephemeris` is the runtime-neutral service contract used by chart generation.
+It keeps astronomical calculations separate from chart projection and allows
+applications to provide a different ephemeris implementation.
+
+## Service contract
+
+```ts
+interface Ephemeris {
+  dateToJulianDay(date: DateTime): Effect.Effect<JulianDay, EphemerisError>;
+
+  calculatePosition(
+    julianDay: JulianDay,
+    body: CelestialBody,
+    ayanamsa: Ayanamsa,
+  ): Effect.Effect<PlanetaryPosition, EphemerisError>;
+
+  calculateHouses(
+    julianDay: JulianDay,
+    latitude: number,
+    longitude: number,
+    houseSystem: HouseSystem,
+    ayanamsa: Ayanamsa,
+  ): Effect.Effect<HouseData, EphemerisError>;
+}
+```
+
+The service is available as the `Ephemeris` Effect context tag. Implementations
+should return `EphemerisError` rather than silently substituting astronomical
+values.
+
+## Models
+
+`CelestialBody` supports `Sun`, `Moon`, `Mars`, `Mercury`, `Venus`, `Jupiter`,
+`Saturn`, and `TrueNode`. Ketu is derived by Ascendant from Rahu's exact
+opposition.
+
+### `PlanetaryPosition`
+
+<TypeTable
+  type={{
+    longitude: {
+      description: 'Sidereal longitude in degrees',
+      type: 'number',
+      required: true,
+    },
+    latitude: {
+      description: 'Celestial latitude in degrees',
+      type: 'number',
+      required: true,
+    },
+    distance: {
+      description: 'Distance in AU',
+      type: 'number',
+      required: true,
+    },
+    longitudeSpeed: {
+      description: 'Daily motion in longitude',
+      type: 'number',
+      required: true,
+    },
+    latitudeSpeed: {
+      description: 'Daily motion in latitude',
+      type: 'number',
+      required: true,
+    },
+    distanceSpeed: {
+      description: 'Daily motion in distance',
+      type: 'number',
+      required: true,
+    },
+    flags: {
+      description: 'Ephemeris flags',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+### `HouseData`
+
+<TypeTable
+  type={{
+    cusps: {
+      description: 'Twelve house cusps in degrees',
+      type: 'number[]',
+      required: true,
+    },
+    ascendant: {
+      description: 'Ascendant in degrees',
+      type: 'number',
+      required: true,
+    },
+    mc: {
+      description: 'Medium Coeli in degrees',
+      type: 'number',
+      required: true,
+    },
+    armc: {
+      description: 'ARMC in degrees',
+      type: 'number',
+      required: true,
+    },
+    vertex: {
+      description: 'Vertex in degrees',
+      type: 'number',
+      required: true,
+    },
+    equatorialAscendant: {
+      description: 'Equatorial ascendant in degrees',
+      type: 'number',
+      required: true,
+    },
+    coAscendant1: {
+      description: 'First co-ascendant in degrees',
+      type: 'number',
+      required: true,
+    },
+    coAscendant2: {
+      description: 'Second co-ascendant in degrees',
+      type: 'number',
+      required: true,
+    },
+    polarAscendant: {
+      description: 'Polar ascendant in degrees',
+      type: 'number',
+      required: true,
+    },
+    houseSystem: {
+      description: 'Selected house system',
+      type: 'HouseSystem',
+      required: true,
+    },
+  }}
+/>
+
+`JulianDay` is a branded finite number. Use the service's date conversion
+method instead of constructing one from an unverified timestamp.

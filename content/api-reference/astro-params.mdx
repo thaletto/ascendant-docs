@@ -3,6 +3,8 @@ title: AstroParams
 description: Astro parameter configuration for ayanamsa and house-system selection.
 ---
 
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+
 The `AstroParams` namespace defines the astronomical configuration used by
 chart generation. Configuration is separate from the `Moment` and location:
 the moment says **when** and the coordinates say **where**, while these
@@ -23,6 +25,26 @@ const runnable = program.pipe(Effect.provide(runtimeLayer));
 
 BunRuntime.runMain(runnable);
 ```
+
+## Options
+
+<TypeTable
+  type={{
+    ayanamsa: {
+      description: 'Sidereal reference frame; see the supported ayanamsas list below',
+      type: 'Ayanamsa',
+      required: true,
+    },
+    houseSystem: {
+      description: 'House system; see the supported house systems list below',
+      type: 'HouseSystem',
+      required: true,
+    },
+  }}
+/>
+
+Pass explicit options to `layer` to change them; `DefaultAstroParams` is
+`KrishnamurtiVP291` ayanamsa with `Placidus` houses.
 
 ## Exports
 

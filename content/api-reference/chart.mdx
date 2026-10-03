@@ -3,6 +3,8 @@ title: Chart
 description: Chart generation and placement models for D1 and divisional charts.
 ---
 
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+
 The `Chart` namespace is the main entry point. It calculates shared sidereal
 placements once and projects them into D1 and requested divisional charts.
 `Chart.generate` also calculates house cusps and angles through the supplied
@@ -30,9 +32,49 @@ const program = Chart.generate(input, [9]).pipe(Effect.provide(runtimeLayer));
 
 ### `generate(input, divisions)`
 
+<TypeTable
+  type={{
+    input: {
+      description: 'LocatedMoment fields plus optional sex',
+      type: 'ChartParams',
+      required: true,
+    },
+    divisions: {
+      description: 'Requested divisional charts; D1 is always first, duplicates removed, sorted numerically',
+      type: 'Division[]',
+    },
+  }}
+/>
+
 `divisions` may contain `1, 2, 3, 4, 7, 9, 10, 12, 16, 20, 24, 27, 30, 40,
 45, 60`. D1 (`division: 1`) is always first. Duplicate requests are removed
 and the remaining divisions are sorted numerically.
+
+#### `ChartParams` fields
+
+<TypeTable
+  type={{
+    moment: {
+      description: 'UTC moment of the chart',
+      type: 'Moment',
+      required: true,
+    },
+    latitude: {
+      description: 'Finite latitude from -90 through 90',
+      type: 'number',
+      required: true,
+    },
+    longitude: {
+      description: 'Finite longitude from -180 through 180',
+      type: 'number',
+      required: true,
+    },
+    sex: {
+      description: 'Copied to each projected chart; it has no inferred default',
+      type: '"Male" | "Female"',
+    },
+  }}
+/>
 
 Coordinates must be finite latitude values from `-90` through `90` and
 longitude values from `-180` through `180`. The optional `sex` value is
@@ -40,6 +82,24 @@ longitude values from `-180` through `180`. The optional `sex` value is
 inferred default.
 
 ### `project(placements, divisions, sex?)`
+
+<TypeTable
+  type={{
+    placements: {
+      description: 'Already calculated shared placements',
+      type: 'Placements',
+      required: true,
+    },
+    divisions: {
+      description: 'Requested divisional charts, beginning with D1',
+      type: 'Division[]',
+    },
+    sex: {
+      description: 'Copied to each projected chart',
+      type: '"Male" | "Female"',
+    },
+  }}
+/>
 
 Projects already calculated `Placements` without invoking an ephemeris
 service. It returns a non-empty tuple of `Chart` values beginning with D1.

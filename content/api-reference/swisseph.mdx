@@ -3,6 +3,8 @@ title: Swisseph
 description: Swiss Ephemeris integration layer for the TypeScript astrology library.
 ---
 
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+
 The root package exports the `Swisseph` namespace, which provides the
 Node.js/Bun adapter backed by `@swisseph/node`.
 
@@ -34,6 +36,23 @@ positions, and house cusps/angles. It maps Ascendant's `Ayanamsa`,
 
 Use `SwissephLayer` together with `AstroParams.DefaultAstroParams` or a
 custom `AstroParams.layer(...)`:
+
+### Custom layer options
+
+<TypeTable
+  type={{
+    ayanamsa: {
+      description: 'Sidereal reference frame, e.g. Lahiri',
+      type: 'Ayanamsa',
+      required: true,
+    },
+    houseSystem: {
+      description: 'House system, e.g. WholeSign',
+      type: 'HouseSystem',
+      required: true,
+    },
+  }}
+/>
 
 ```ts
 const layers = Layer.merge(
