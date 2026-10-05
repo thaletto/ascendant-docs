@@ -1,0 +1,23 @@
+---
+title: Provenance
+description: Method specification and provenance records attached to calculations.
+---
+
+The `Provenance` namespace defines the method specifications and provenance
+records stamped onto calculations, so results carry their school, method, and
+version.
+
+```ts
+import { Provenance } from "astro-ascendant";
+```
+
+## Records
+
+- `CalculationProvenance` — school, method, and version of a calculation.
+- `MethodStep` — one documented step (`id`, `description`) of a method.
+- `MethodSpecification` — provenance plus the full `steps` list and
+  `verification` notes.
+- `ChartProjectionProvenance` — the Ascendant divisional-mapping stamp on
+  `Chart` output.
+- `JaiminiArgalaProvenance` — the Jaimini structural-positions stamp on
+  Argala output.

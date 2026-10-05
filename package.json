@@ -14,7 +14,8 @@
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
-    "lint:fix": "oxlint --fix"
+    "lint:fix": "oxlint --fix",
+    "sync:api": "bun run scripts/sync-api.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
