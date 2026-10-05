@@ -3,89 +3,228 @@ title: Jaimini
 description: Jaimini calculations for Chara Karakas, Rashi Drishti, Karakamsha, Arudha Pada, Upapada, and Argala.
 ---
 
-import { TypeTable } from 'fumadocs-ui/components/type-table';
+{/* Generated from astro-ascendant@4.0.1. Do not edit by hand. Run `make sync-api` to regenerate. */}
 
-Ascendant exposes each Jaimini calculation as an independent root subpath.
-They consume `Chart.Placements` unless noted otherwise and return typed Effect
-results.
-
-| Subpath                         | Namespace      | Entry point                        | Purpose                                                |
-| ------------------------------- | -------------- | ---------------------------------- | ------------------------------------------------------ |
-| `astro-ascendant/chara-karakas` | `CharaKarakas` | `calculate(placements)`            | Assigns the seven Chara Karaka roles                   |
-| `astro-ascendant/rashi-drishti` | `RashiDrishti` | `calculate(reference)`             | Returns sign-aspect relationships for a reference sign |
-| `astro-ascendant/karakamsha`    | `Karakamsha`   | `calculate(placements)`            | Finds the D9 sign for each Atmakaraka holder           |
-| `astro-ascendant/arudha-pada`   | `ArudhaPada`   | `calculate(placements, house)`     | Calculates one house's Arudha Pada                     |
-| `astro-ascendant/upapada`       | `Upapada`      | `calculate(placements)`            | Calculates the twelfth-house Arudha Pada               |
-| `astro-ascendant/argala`        | `Argala`       | `calculate(placements, reference)` | Calculates supporting and obstructing Argala           |
-
-The same namespaces are available from the package root:
+Import from `astro-ascendant/argala`:
 
 ```ts
-import {
-  Argala,
-  ArudhaPada,
-  CharaKarakas,
-  Karakamsha,
-  RashiDrishti,
-  Upapada,
-} from "astro-ascendant";
+import * as Jaimini from "astro-ascendant/argala";
 ```
 
-## Input conventions
+## Functions
 
-### `ArudhaPada.calculate(placements, house)`
+### `calculate`
 
-<TypeTable
-  type={{
-    placements: {
-      description: 'Shared sidereal placements',
-      type: 'Placements',
-      required: true,
-    },
-    house: {
-      description: 'House number to project',
-      type: '1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12',
-      required: true,
-    },
-  }}
-/>
+```ts
+const calculate: (placements: Placements) => Effect.Effect<{
+    provenance: {
+        readonly school: "Jaimini";
+        readonly method: "exact-degree-shared-roles";
+        readonly version: 1;
+    };
+    assignments: {
+        Atmakaraka: readonly [Holder, ...Holder[]];
+        Amatyakaraka: readonly [Holder, ...Holder[]];
+        Bhratrikaraka: readonly [Holder, ...Holder[]];
+        Matrikaraka: readonly [Holder, ...Holder[]];
+        Putrakaraka: readonly [Holder, ...Holder[]];
+        Gnatikaraka: readonly [Holder, ...Holder[]];
+        Darakaraka: readonly [Holder, ...Holder[]];
+    };
+}, EvidenceError | ParseError, never>
+```
 
-### `Argala.calculate(placements, reference)`
+### `compareExactDegrees`
 
-<TypeTable
-  type={{
-    placements: {
-      description: 'Shared sidereal placements',
-      type: 'Placements',
-      required: true,
-    },
-    reference: {
-      description: 'Sign reference, or Ketu for reverse directional counting; do not substitute a generic planet reference',
-      type: '{ kind: "Sign", sign: Rashis } | { kind: "Ketu" }',
-      required: true,
-    },
-  }}
-/>
+```ts
+const compareExactDegrees: ((right: ExactDegree) => (left: ExactDegree) => number) & ((left: ExactDegree, right: ExactDegree) => number)
+```
 
-`RashiDrishti.calculate` accepts one of the twelve sign names directly.
-`ArudhaPada.calculate` accepts a house number from `1` through `12`.
-`Argala.calculate` accepts either a sign reference or a Ketu reference. Ketu
-uses the method's reverse directional counting; do not substitute a generic
-planet reference.
+### `exactDegreeOf`
 
-## Result conventions
+```ts
+const exactDegreeOf: (longitude: number & import("effect/Brand").Brand<"Longitude">) => Effect.Effect<{
+    coefficient: bigint;
+    scale: number;
+    value: number & import("effect/Brand").Brand<"Degree">;
+}, ParseError, never>
+```
 
-- **Chara Karakas** returns role assignments and preserves ties: planets with
-  the same exact degree within their sign jointly hold the relevant role.
-- **Karakamsha** returns one result for every planet holding Atmakaraka and
-  the corresponding D9 sign.
-- **Arudha Pada** returns the projection for the requested house. It does not
-  apply exceptional source-sign or seventh-sign adjustments.
-- **Upapada** is the Arudha Pada of the twelfth D1 house.
-- **Rashi Drishti** returns sign relationships, not degree-based planetary
-  aspects.
-- **Argala** returns supporting and obstructing relationships around one
-  explicit reference.
+### `targetsOf`
 
-Each submodule exports its result schema and domain errors alongside
-`calculate`.
+```ts
+const targetsOf: (reference: "Aquarius" | "Aries" | "Cancer" | "Capricorn" | "Gemini" | "Leo" | "Libra" | "Pisces" | "Sagittarius" | "Scorpio" | "Taurus" | "Virgo") => Effect.Effect<readonly ["Aquarius" | "Aries" | "Cancer" | "Capricorn" | "Gemini" | "Leo" | "Libra" | "Pisces" | "Sagittarius" | "Scorpio" | "Taurus" | "Virgo", "Aquarius" | "Aries" | "Cancer" | "Capricorn" | "Gemini" | "Leo" | "Libra" | "Pisces" | "Sagittarius" | "Scorpio" | "Taurus" | "Virgo", "Aquarius" | "Aries" | "Cancer" | "Capricorn" | "Gemini" | "Leo" | "Libra" | "Pisces" | "Sagittarius" | "Scorpio" | "Taurus" | "Virgo"], CalculationError | SignIndexError, never>
+```
+
+## Classes
+
+### `CalculationError`
+
+```ts
+class CalculationError extends CalculationError_base {
+}
+```
+
+### `EvidenceError`
+
+```ts
+class EvidenceError extends EvidenceError_base {
+}
+```
+
+### `ParseError`
+
+```ts
+class ParseError extends ParseError_base {
+}
+```
+
+## Interfaces
+
+### `ExactDegree`
+
+```ts
+interface ExactDegree {
+    readonly coefficient: bigint;
+    readonly scale: number;
+    readonly value: Degree;
+}
+```
+
+### `RankedHolder`
+
+```ts
+interface RankedHolder extends Holder {
+    readonly exactDegree: ExactDegree;
+}
+```
+
+## Types
+
+### `Role`
+
+```ts
+type Role = typeof Roles.Type
+```
+
+## Constants
+
+### `Assignments`
+
+```ts
+const Assignments: Schema.$Record<Schema.Literals<readonly ["Atmakaraka", "Amatyakaraka", "Bhratrikaraka", "Matrikaraka", "Putrakaraka", "Gnatikaraka", "Darakaraka"]>, Schema.NonEmptyArray<Schema.Struct<{
+    readonly planet: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>;
+    readonly degree: Schema.brand<Schema.Finite, "Degree">;
+}>>>
+```
+
+### `ClassicalPlanets`
+
+```ts
+const ClassicalPlanets: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>
+```
+
+### `Holder`
+
+```ts
+const Holder: Schema.Struct<{
+    readonly planet: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>;
+    readonly degree: Schema.brand<Schema.Finite, "Degree">;
+}>
+```
+
+### `KetuReference`
+
+```ts
+const KetuReference: Schema.Struct<{
+    readonly kind: Schema.Literal<"Ketu">;
+}>
+```
+
+### `Placement`
+
+```ts
+const Placement: Schema.Struct<{
+    readonly planet: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>;
+    readonly sign: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>;
+}>
+```
+
+### `Positions`
+
+```ts
+const Positions: Schema.Literals<readonly [2, 4, 11, 12, 10, 3, 5, 9]>
+```
+
+### `Provenance`
+
+```ts
+const Provenance: Schema.Struct<{
+    readonly school: Schema.Literal<"Jaimini">;
+    readonly method: Schema.Literal<"structural-positions">;
+    readonly version: Schema.Literal<1>;
+}>
+```
+
+### `Reference`
+
+```ts
+const Reference: Schema.Union<readonly [Schema.Struct<{
+    readonly kind: Schema.Literal<"Sign">;
+    readonly sign: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>;
+}>, Schema.Struct<{
+    readonly kind: Schema.Literal<"Ketu">;
+}>]>
+```
+
+### `Relation`
+
+```ts
+const Relation: Schema.Struct<{
+    readonly position: Schema.Literals<readonly [2, 4, 11, 12, 10, 3, 5, 9]>;
+    readonly sign: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>;
+    readonly planets: Schema.$Array<Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"]>>;
+}>
+```
+
+### `Result`
+
+```ts
+const Result: Schema.Struct<{
+    readonly provenance: Schema.Struct<{
+        readonly school: Schema.Literal<"Jaimini">;
+        readonly method: Schema.Literal<"structural-positions">;
+        readonly version: Schema.Literal<1>;
+    }>;
+    readonly reference: Schema.Union<readonly [Schema.Struct<{
+        readonly kind: Schema.Literal<"Sign">;
+        readonly sign: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>;
+    }>, Schema.Struct<{
+        readonly kind: Schema.Literal<"Ketu">;
+    }>]>;
+    readonly referenceSign: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>;
+    readonly direction: Schema.Literals<readonly ["forward", "reverse"]>;
+    readonly supporting: Schema.Tuple<readonly [Schema.Struct<{
+        readonly position: Schema.Literals<readonly [2, 4, 11, 12, 10, 3, 5, 9]>;
+        readonly sign: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>;
+        readonly planets: Schema.$Array<Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"]>>;
+    }>, Schema.Struct<{
+        readonly position: Schema.Literals<readonly [2, 4, 11, 12, 10, 3, 5, 9]>;
+        readonly sign: Schema.Literals<readonly ["Aries", "T
+// … truncated
+```
+
+### `Roles`
+
+```ts
+const Roles: Schema.Literals<readonly ["Atmakaraka", "Amatyakaraka", "Bhratrikaraka", "Matrikaraka", "Putrakaraka", "Gnatikaraka", "Darakaraka"]>
+```
+
+### `SignReference`
+
+```ts
+const SignReference: Schema.Struct<{
+    readonly kind: Schema.Literal<"Sign">;
+    readonly sign: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>;
+}>
+```

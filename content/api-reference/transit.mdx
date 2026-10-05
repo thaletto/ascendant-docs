@@ -3,168 +3,120 @@ title: Transit
 description: Mechanics-only search for the next or previous transit events of one graha.
 ---
 
-import { TypeTable } from 'fumadocs-ui/components/type-table';
+{/* Generated from astro-ascendant@4.0.1. Do not edit by hand. Run `make sync-api` to regenerate. */}
 
-The `Transit` namespace searches for the next or previous transit events of
-one graha from a `LocatedMoment`. It is mechanics-only: each event reports
-the exact moment, longitude, kind, and retrograde state. There is no
-interpretation here.
+Import from `astro-ascendant/transit`:
 
 ```ts
-import { Effect } from "effect";
-
-import { AstroParams, Transit, Swisseph } from "astro-ascendant";
-
-const ingresses = await Effect.runPromise(
-  Transit.findTransits({
-    planet: "Jupiter",
-    from: locatedMoment,
-    count: 3,
-    direction: "forward",
-    kinds: ["sign-ingress"],
-    maxYears: 12,
-  }).pipe(
-    Effect.provide(AstroParams.layer({ ayanamsa: "Lahiri", houseSystem: "WholeSign" })),
-    Effect.provide(Swisseph.SwissephLayer),
-  ),
-);
+import * as Transit from "astro-ascendant/transit";
 ```
 
-## Public exports
+## Functions
+
+### `dateTimeFromJd`
 
 ```ts
-export * from "./error.js";
-export * from "./model.js";
-export { findTransits } from "./find.js";
+function dateTimeFromJd(julianDay: number): DateTime.Utc
 ```
 
-`findTransits(request)` is the single entry point. It requires the
-`AstroParams` and `Ephemeris` Effect layers. The low-level sampling helpers
-(`searchRawHits`, `sampleAt`, `normalize360`, and related types) are also
-re-exported for custom search tooling.
+### `findTransits`
 
-## Event kinds
+```ts
+const findTransits: (request: TransitRequest) => Effect.Effect<TransitEvent[], import("../chart/error.js").ChartCalculationError | import("../chart/divisional-mapping/error.js").DivisionalMappingError | import("../ephemeris/error.js").EphemerisError | import("../chart/error.js").LocatedMomentValidationError | import("../utils/position.js").LongitudeError | TransitSearchExhausted | TransitValidationError, AstroParams | Ephemeris>
+```
 
-| Kind            | Meaning                                                         | Requires          |
-| --------------- | --------------------------------------------------------------- | ----------------- |
-| `sign-ingress`  | Sidereal D1 Rashi boundary crossing                             | —                 |
-| `longitude-hit` | Exact crossing of `targetLongitude`                             | `targetLongitude` |
-| `cusp-crossing` | Crossing of the natal house cusp for `house` computed at `from` | `house`           |
-| `station`       | Retrograde station, detected via a `longitudeSpeed` sign change | —                 |
+### `millisFromJd`
 
-Cusp targets are the natal house cusps at `from` under the shared
-`AstroParams`. Charts attach afterwards only when `includeCharts` asks.
+```ts
+function millisFromJd(julianDay: number): number
+```
 
-## Request fields
+### `normalize360`
 
-<TypeTable
-  type={{
-    planet: {
-      description: 'The single graha to track',
-      type: 'Planets',
-      required: true,
-    },
-    from: {
-      description: 'Starting moment, latitude, and longitude',
-      type: 'LocatedMoment',
-      required: true,
-    },
-    count: {
-      description: 'Number of events to return (1–100)',
-      type: 'number',
-      required: true,
-    },
-    direction: {
-      description: 'Search direction in time',
-      type: '"forward" | "backward"',
-      required: true,
-    },
-    kinds: {
-      description: 'Which event kinds to match (non-empty)',
-      type: 'TransitKind[]',
-      required: true,
-    },
-    targetLongitude: {
-      description: 'Required for longitude-hit',
-      type: 'Longitude',
-    },
-    house: {
-      description: 'Required for cusp-crossing (1–12)',
-      type: 'Houses',
-    },
-    maxYears: {
-      description: 'Search window in years (0 exclusive–200)',
-      type: 'number',
-      default: 30,
-    },
-    precisionMinutes: {
-      description: 'Refinement precision in minutes (0 exclusive–1440)',
-      type: 'number',
-      default: 1,
-    },
-    includeCharts: {
-      description: 'Attaches one full ChartCalculation per found moment when set',
-      type: 'Division[]',
-    },
-  }}
-/>
+```ts
+function normalize360(degrees: number): Longitude
+```
 
-## Result and guarantees
+### `sampleAt`
 
-Each `TransitEvent` contains:
+```ts
+const sampleAt: (julianDay: number, planet: "Jupiter" | "Ketu" | "Mars" | "Mercury" | "Moon" | "Rahu" | "Saturn" | "Sun" | "Venus", ayanamsa: "Aldebaran15Tau" | "Aryabhata" | "Aryabhata522" | "AryabhataMeanSun" | "B1950" | "BabylBritton" | "BabylEtPSC" | "BabylHuber" | "BabylKugler1" | "BabylKugler2" | "BabylKugler3" | "DeLuce" | "DhruvaGalCenterMulaWilhelm" | "DjwhalKhul" | "FaganBradley" | "GalacticCenter0Sag" | "GalacticCenterCochrane" | "GalacticCenterGilBrand" | "GalacticEquator" | "GalacticEquatorFiorenza" | "GalacticEquatorIAU1958" | "GalacticEquatorMidMula" | "Hipparchos" | "J1900" | "J2000" | "JNBhasin" | "Krishnamurti" | "KrishnamurtiVP291" | "Lahiri" | "Lahiri1940" | "LahiriICRC" | "LahiriVP285" | "Raman" | "SSCitra" | "SSRevati" | "Sassanian" | "Skydram" | "SuryaSiddhanta" | "SuryaSiddhantaMeanSun" | "TrueCitra" | "TrueMula" | "TruePushya" | "TrueRevati" | "TrueSheoran" | "Ushashashi" | "ValensMoon" | "Yukteshwar") => Effect.Effect<{
+    julianDay: number;
+    longitude: number & import("effect/Brand").Brand<"Longitude">;
+    speed: number;
+}, import("../ephemeris/error.js").EphemerisError, Ephemeris>
+```
 
-<TypeTable
-  type={{
-    planet: {
-      description: 'The tracked graha',
-      type: 'Planets',
-      required: true,
-    },
-    moment: {
-      description: 'Exact UTC moment of the event',
-      type: 'DateTime',
-      required: true,
-    },
-    longitude: {
-      description: 'Sidereal longitude at the event',
-      type: 'Longitude',
-      required: true,
-    },
-    kind: {
-      description: 'Which event kind matched',
-      type: 'TransitKind',
-      required: true,
-    },
-    sign: {
-      description: 'D1 sign, present on ingress events',
-      type: 'Rashis',
-    },
-    is_retrograde: {
-      description: 'Retrograde state at the event',
-      type: 'boolean',
-      required: true,
-    },
-    direction: {
-      description: 'Search direction that found the event',
-      type: '"forward" | "backward"',
-      required: true,
-    },
-    provenance: {
-      description: 'Versioned calculation method',
-      type: '{ school: "Ascendant", method: "transit-sample-bisect", version: 1 }',
-      required: true,
-    },
-    calculation: {
-      description: 'Full chart calculation, only when includeCharts requested divisions',
-      type: 'ChartCalculation',
-    },
-  }}
-/>
+### `wrap180`
 
-- Every zero-crossing counts in strict time order, so retrograde triples
-  yield three events.
-- Refinement bisects to `precisionMinutes` (default `1`).
-- An exhausted `maxYears` window fails with typed `TransitSearchExhausted`
-  (carrying the partial `found` events and `searchedUntil`) instead of a
-  short list.
-- Invalid requests fail with typed `TransitValidationError`.
+```ts
+function wrap180(degrees: number): number
+```
+
+## Classes
+
+### `TransitEvent`
+
+```ts
+class TransitEvent extends TransitEvent_base {
+}
+```
+
+### `TransitSearchExhausted`
+
+```ts
+class TransitSearchExhausted extends TransitSearchExhausted_base {
+}
+```
+
+### `TransitValidationError`
+
+```ts
+class TransitValidationError extends TransitValidationError_base {
+}
+```
+
+## Interfaces
+
+### `TransitRequest`
+
+```ts
+interface TransitRequest {
+    readonly planet: Planets;
+    readonly from: LocatedMoment;
+    readonly count: number;
+    readonly direction: TransitDirection;
+    readonly kinds: ReadonlyArray<TransitKind>;
+    readonly targetLongitude?: Longitude;
+    readonly house?: Houses;
+    readonly maxYears?: number;
+    readonly precisionMinutes?: number;
+    readonly includeCharts?: ReadonlyArray<Division>;
+}
+```
+
+## Constants
+
+### `COARSE_STEP_DAYS`
+
+```ts
+const COARSE_STEP_DAYS: Record<Planets, number>
+```
+
+### `JD_UNIX_EPOCH`
+
+```ts
+const JD_UNIX_EPOCH = 2440587.5
+```
+
+### `TransitDirection`
+
+```ts
+const TransitDirection: Schema.Literals<readonly ["forward", "backward"]>
+```
+
+### `TransitKind`
+
+```ts
+const TransitKind: Schema.Literals<readonly ["sign-ingress", "cusp-crossing", "longitude-hit", "station"]>
+```

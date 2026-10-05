@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install dev build preview typecheck fmt fmt-check lint lint-fix check sync-skills
+.PHONY: help install dev build preview typecheck fmt fmt-check lint lint-fix check sync-api
 
 help: ## Show available development commands.
 	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z_-]+:.*##/ {printf "%-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -34,5 +34,5 @@ lint-fix: ## Lint and apply fixes.
 
 check: fmt-check lint typecheck ## Run format, lint, and type checks.
 
-sync-skills: ## Replace content/skills with the skills tree fetched from GitHub.
-	bun run sync:skills
+sync-api: ## Check installed astro-ascendant exports against curated api-reference pages.
+	bun run scripts/sync-api.ts

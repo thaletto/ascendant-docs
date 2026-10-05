@@ -3,83 +3,161 @@ title: SAV
 description: Ashtakavarga and Shodhya Pinda calculations for shared chart placements.
 ---
 
-import { TypeTable } from 'fumadocs-ui/components/type-table';
+{/* Generated from astro-ascendant@4.0.1. Do not edit by hand. Run `make sync-api` to regenerate. */}
 
-The `SAV` namespace calculates Parashari Ashtakavarga from shared
-`Chart.Placements`.
+Import from `astro-ascendant/sav`:
 
 ```ts
-const result = yield * SAV.calculate(calculation.placements);
+import * as SAV from "astro-ascendant/sav";
 ```
 
-## `calculate(placements)`
+## Functions
 
-Returns an Effect containing:
+### `calculate`
 
-<TypeTable
-  type={{
+```ts
+const calculate: (placements: Placements) => Effect.Effect<{
     bhinna: {
-      description: 'Bhinnashtakavarga (BAV): a twelve-sign score table for each of the seven classical planets and Lagna',
-      type: 'Record<AshtakavargaEntities, SignScores>',
-      required: true,
-    },
-    sarva: {
-      description: 'Sarvashtakavarga (SAV): the sum of the seven planetary BAV tables. Lagna is excluded; the twelve scores total 337',
-      type: 'SignScores',
-      required: true,
-    },
-    reduced: {
-      description: 'Planetary BAV after Trikona and Ekadhipatya reductions',
-      type: 'ReducedAshtakavarga',
-      required: true,
-    },
-    shodhya_pinda: {
-      description: 'Per-planet weighted totals built from Rashi Pinda and Graha Pinda',
-      type: 'Record<AshtakavargaPlanets, Pinda>',
-      required: true,
-    },
-    totals: {
-      description: 'Expected BAV/SAV totals used to verify the calculation',
-      type: '{ Sun: Int, Moon: Int, Mars: Int, Mercury: Int, Jupiter: Int, Venus: Int, Saturn: Int, Lagna: Int, sarva: Int }',
-      required: true,
-    },
-  }}
-/>
+        readonly Jupiter: {
+            readonly Aquarius: number;
+            readonly Aries: number;
+            readonly Cancer: number;
+            readonly Capricorn: number;
+            readonly Gemini: number;
+            readonly Leo: number;
+            readonly Libra: number;
+            readonly Pisces: number;
+            readonly Sagittarius: number;
+            readonly Scorpio: number;
+            readonly Taurus: number;
+            readonly Virgo: number;
+        };
+        readonly Lagna: {
+            readonly Aquarius: number;
+            readonly Aries: number;
+            readonly Cancer: number;
+            readonly Capricorn: number;
+            readonly Gemini: number;
+            readonly Leo: number;
+            readonly Libra: number;
+            readonly Pisces: number;
+            readonly Sagittarius: number;
+            readonly Scorpio: number;
+            readonly Taurus: number;
+            readonly Virgo: number;
+        };
+        readonly Mars: {
+            readonly Aquarius: number;
+            readonly Aries: number;
+            readonly Cancer: number;
+            readonly Capricorn: number;
+            readonly Gemini: number;
+            readonly Leo: number;
+            readonly Libra: number;
+            readonly Pisces: number;
+            readonly Sagittarius: number;
+            readonly Scorpio: number;
+            readonly Taurus: number;
+            r
+// … truncated
+```
 
-### `Pinda` fields
+## Classes
 
-<TypeTable
-  type={{
-    rashi_pinda: {
-      description: 'Rashi-weighted component',
-      type: 'Int',
-      required: true,
-    },
-    graha_pinda: {
-      description: 'Graha-weighted component',
-      type: 'Int',
-      required: true,
-    },
-    shodhya_pinda: {
-      description: 'Combined Shodhya Pinda total',
-      type: 'Int',
-      required: true,
-    },
-  }}
-/>
+### `SAVCalculationError`
 
-## Models
+```ts
+class SAVCalculationError extends SAVCalculationError_base {
+}
+```
 
-| Model                  | Shape                                        |
-| ---------------------- | -------------------------------------------- |
-| `AshtakavargaPlanets`  | Seven classical planets                      |
-| `AshtakavargaEntities` | Those planets plus `Lagna`                   |
-| `SignScores`           | Record of the twelve signs to integer scores |
-| `BhinnaAshtakavarga`   | Entity-to-sign score tables                  |
-| `ReducedAshtakavarga`  | Planet-to-sign reduced score tables          |
-| `ShodhyaPinda`         | Planet-to-`Pinda` records                    |
-| `AshtakavargaResult`   | Complete calculation result                  |
+## Constants
 
-Ashtakavarga scores are bindu counts, not probabilities or predictions. The
-module exports `SAVCalculationError` for invalid or inconsistent placement
-evidence.
+### `AshtakavargaEntities`
+
+```ts
+const AshtakavargaEntities: Schema.Union<readonly [Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>, Schema.Literal<"Lagna">]>
+```
+
+### `AshtakavargaPlanets`
+
+```ts
+const AshtakavargaPlanets: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>
+```
+
+### `AshtakavargaResult`
+
+```ts
+const AshtakavargaResult: Schema.Struct<{
+    readonly bhinna: Schema.$Record<Schema.Union<readonly [Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>, Schema.Literal<"Lagna">]>, Schema.$Record<Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>, Schema.Int>>;
+    readonly sarva: Schema.$Record<Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>, Schema.Int>;
+    readonly reduced: Schema.$Record<Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>, Schema.$Record<Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>, Schema.Int>>;
+    readonly shodhya_pinda: Schema.$Record<Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>, Schema.Struct<{
+        readonly rashi_pinda: Schema.Int;
+        readonly graha_pinda: Schema.Int;
+        readonly shodhya_pinda: Schema.Int;
+    }>>;
+    readonly totals: Schema.Struct<{
+        readonly Sun: Schema.Int;
+        readonly Moon: Schema.Int;
+        readonly Mars: Schema.Int;
+        readonly Mercury: Schema.Int;
+        readonly Jupiter: Schema.Int;
+        readonly Venus: Schema.Int;
+        readonly Saturn: Schema.Int;
+// … truncated
+```
+
+### `AshtakavargaTotals`
+
+```ts
+const AshtakavargaTotals: Schema.Struct<{
+    readonly Sun: Schema.Int;
+    readonly Moon: Schema.Int;
+    readonly Mars: Schema.Int;
+    readonly Mercury: Schema.Int;
+    readonly Jupiter: Schema.Int;
+    readonly Venus: Schema.Int;
+    readonly Saturn: Schema.Int;
+    readonly Lagna: Schema.Int;
+    readonly sarva: Schema.Int;
+}>
+```
+
+### `BhinnaAshtakavarga`
+
+```ts
+const BhinnaAshtakavarga: Schema.$Record<Schema.Union<readonly [Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>, Schema.Literal<"Lagna">]>, Schema.$Record<Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>, Schema.Int>>
+```
+
+### `Pinda`
+
+```ts
+const Pinda: Schema.Struct<{
+    readonly rashi_pinda: Schema.Int;
+    readonly graha_pinda: Schema.Int;
+    readonly shodhya_pinda: Schema.Int;
+}>
+```
+
+### `ReducedAshtakavarga`
+
+```ts
+const ReducedAshtakavarga: Schema.$Record<Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>, Schema.$Record<Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>, Schema.Int>>
+```
+
+### `ShodhyaPinda`
+
+```ts
+const ShodhyaPinda: Schema.$Record<Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>, Schema.Struct<{
+    readonly rashi_pinda: Schema.Int;
+    readonly graha_pinda: Schema.Int;
+    readonly shodhya_pinda: Schema.Int;
+}>>
+```
+
+### `SignScores`
+
+```ts
+const SignScores: Schema.$Record<Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>, Schema.Int>
+```

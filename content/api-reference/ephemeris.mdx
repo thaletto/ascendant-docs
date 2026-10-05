@@ -3,142 +3,73 @@ title: Ephemeris
 description: Ephemeris service contract and runtime-neutral position models.
 ---
 
-import { TypeTable } from 'fumadocs-ui/components/type-table';
+{/* Generated from astro-ascendant@4.0.1. Do not edit by hand. Run `make sync-api` to regenerate. */}
 
-`Ephemeris` is the runtime-neutral service contract used by chart generation.
-It keeps astronomical calculations separate from chart projection and allows
-applications to provide a different ephemeris implementation.
-
-## Service contract
+Import from `astro-ascendant/ephemeris`:
 
 ```ts
-interface Ephemeris {
-  dateToJulianDay(date: DateTime): Effect.Effect<JulianDay, EphemerisError>;
+import * as Ephemeris from "astro-ascendant/ephemeris";
+```
 
-  calculatePosition(
-    julianDay: JulianDay,
-    body: CelestialBody,
-    ayanamsa: Ayanamsa,
-  ): Effect.Effect<PlanetaryPosition, EphemerisError>;
+## Classes
 
-  calculateHouses(
-    julianDay: JulianDay,
-    latitude: number,
-    longitude: number,
-    houseSystem: HouseSystem,
-    ayanamsa: Ayanamsa,
-  ): Effect.Effect<HouseData, EphemerisError>;
+### `Ephemeris`
+
+```ts
+declare class Ephemeris extends Service_base {
 }
 ```
 
-The service is available as the `Ephemeris` Effect context tag. Implementations
-should return `EphemerisError` rather than silently substituting astronomical
-values.
+### `EphemerisError`
 
-## Models
+```ts
+class EphemerisError extends EphemerisError_base {
+}
+```
 
-`CelestialBody` supports `Sun`, `Moon`, `Mars`, `Mercury`, `Venus`, `Jupiter`,
-`Saturn`, and `TrueNode`. Ketu is derived by Ascendant from Rahu's exact
-opposition.
-
-### `PlanetaryPosition`
-
-<TypeTable
-  type={{
-    longitude: {
-      description: 'Sidereal longitude in degrees',
-      type: 'number',
-      required: true,
-    },
-    latitude: {
-      description: 'Celestial latitude in degrees',
-      type: 'number',
-      required: true,
-    },
-    distance: {
-      description: 'Distance in AU',
-      type: 'number',
-      required: true,
-    },
-    longitudeSpeed: {
-      description: 'Daily motion in longitude',
-      type: 'number',
-      required: true,
-    },
-    latitudeSpeed: {
-      description: 'Daily motion in latitude',
-      type: 'number',
-      required: true,
-    },
-    distanceSpeed: {
-      description: 'Daily motion in distance',
-      type: 'number',
-      required: true,
-    },
-    flags: {
-      description: 'Ephemeris flags',
-      type: 'number',
-      required: true,
-    },
-  }}
-/>
+## Interfaces
 
 ### `HouseData`
 
-<TypeTable
-  type={{
-    cusps: {
-      description: 'Twelve house cusps in degrees',
-      type: 'number[]',
-      required: true,
-    },
-    ascendant: {
-      description: 'Ascendant in degrees',
-      type: 'number',
-      required: true,
-    },
-    mc: {
-      description: 'Medium Coeli in degrees',
-      type: 'number',
-      required: true,
-    },
-    armc: {
-      description: 'ARMC in degrees',
-      type: 'number',
-      required: true,
-    },
-    vertex: {
-      description: 'Vertex in degrees',
-      type: 'number',
-      required: true,
-    },
-    equatorialAscendant: {
-      description: 'Equatorial ascendant in degrees',
-      type: 'number',
-      required: true,
-    },
-    coAscendant1: {
-      description: 'First co-ascendant in degrees',
-      type: 'number',
-      required: true,
-    },
-    coAscendant2: {
-      description: 'Second co-ascendant in degrees',
-      type: 'number',
-      required: true,
-    },
-    polarAscendant: {
-      description: 'Polar ascendant in degrees',
-      type: 'number',
-      required: true,
-    },
-    houseSystem: {
-      description: 'Selected house system',
-      type: 'HouseSystem',
-      required: true,
-    },
-  }}
-/>
+```ts
+interface HouseData {
+    readonly cusps: readonly number[];
+    readonly ascendant: number;
+    readonly mc: number;
+    readonly armc: number;
+    readonly vertex: number;
+    readonly equatorialAscendant: number;
+    readonly coAscendant1: number;
+    readonly coAscendant2: number;
+    readonly polarAscendant: number;
+    readonly houseSystem: typeof HouseSystem.Type;
+}
+```
 
-`JulianDay` is a branded finite number. Use the service's date conversion
-method instead of constructing one from an unverified timestamp.
+### `PlanetaryPosition`
+
+```ts
+interface PlanetaryPosition {
+    readonly longitude: number;
+    readonly latitude: number;
+    readonly distance: number;
+    readonly longitudeSpeed: number;
+    readonly latitudeSpeed: number;
+    readonly distanceSpeed: number;
+    readonly flags: number;
+}
+```
+
+## Constants
+
+### `CelestialBody`
+
+```ts
+const CelestialBody: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "TrueNode", "MeanNode"]>
+```
+
+### `JulianDay`
+
+```ts
+const JulianDay: Schema.brand<Schema.Finite, "JulianDay">
+```

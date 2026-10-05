@@ -3,124 +3,54 @@ title: AstroParams
 description: Astro parameter configuration for ayanamsa and house-system selection.
 ---
 
-import { TypeTable } from 'fumadocs-ui/components/type-table';
+{/* Generated from astro-ascendant@4.0.1. Do not edit by hand. Run `make sync-api` to regenerate. */}
 
-The `AstroParams` namespace defines the astronomical configuration used by
-chart generation. Configuration is separate from the `Moment` and location:
-the moment says **when** and the coordinates say **where**, while these
-parameters say which sidereal reference frame and house system to use.
+Import from `astro-ascendant/astro-params`:
 
 ```ts
-import { AstroParams, Chart, Swisseph } from "astro-ascendant";
-import { BunServices } from "@effect/platform-bun";
-import { Effect, Layer } from "effect";
-
-const runtimeLayer = Layer.mergeAll(
-  BunServices.layer,
-  Swisseph.SwissephLayer,
-  AstroParams.DefaultAstroParams,
-);
-
-const runnable = program.pipe(Effect.provide(runtimeLayer));
-
-BunRuntime.runMain(runnable);
+import * as AstroParams from "astro-ascendant/astro-params";
 ```
 
-## Options
+## Functions
 
-<TypeTable
-  type={{
-    ayanamsa: {
-      description: 'Sidereal reference frame; see the supported ayanamsas list below',
-      type: 'Ayanamsa',
-      required: true,
-    },
-    houseSystem: {
-      description: 'House system; see the supported house systems list below',
-      type: 'HouseSystem',
-      required: true,
-    },
-  }}
-/>
+### `layer`
 
-Pass explicit options to `layer` to change them; `DefaultAstroParams` is
-`KrishnamurtiVP291` ayanamsa with `Placidus` houses.
+```ts
+function layer(options: Options): Layer.Layer<Service, never, never>
+```
 
-## Exports
+## Classes
 
-| Export               | Description                                                                                               |
-| -------------------- | --------------------------------------------------------------------------------------------------------- |
-| `Ayanamsa`           | Schema and type for the supported sidereal ayanamsas                                                      |
-| `HouseSystem`        | Schema and type for supported house systems                                                               |
-| `Options`            | `{ ayanamsa, houseSystem }` configuration object                                                          |
-| `AstroParams`        | Effect service consumed by chart generation                                                               |
-| `layer(options)`     | Builds a layer providing the supplied configuration                                                       |
-| `DefaultAstroParams` | `KrishnamurtiVP291` ayanamsa with `Placidus` houses (library default; pass explicit options to change it) |
+### `AstroParams`
 
-Supported house systems:
+```ts
+declare class AstroParams extends Service_base {
+}
+```
 
-- `Placidus`
-- `Koch`
-- `Porphyrius`
-- `Regiomontanus`
-- `Campanus`
-- `Equal`
-- `VehlowEqual`
-- `WholeSign`
-- `Meridian`
-- `Azimuthal`
-- `PolichPage`
-- `Alcabitus`
-- `Morinus`
+### `Options`
 
-Supported ayanamsas:
+```ts
+class Options extends Options_base {
+}
+```
 
-- `FaganBradley`
-- `Lahiri`
-- `DeLuce`
-- `Raman`
-- `Ushashashi`
-- `Krishnamurti`
-- `DjwhalKhul`
-- `Yukteshwar`
-- `JNBhasin`
-- `BabylKugler1`
-- `BabylKugler2`
-- `BabylKugler3`
-- `BabylHuber`
-- `BabylEtPSC`
-- `Aldebaran15Tau`
-- `Hipparchos`
-- `Sassanian`
-- `GalacticCenter0Sag`
-- `J2000`
-- `J1900`
-- `B1950`
-- `SuryaSiddhanta`
-- `SuryaSiddhantaMeanSun`
-- `Aryabhata`
-- `AryabhataMeanSun`
-- `SSRevati`
-- `SSCitra`
-- `TrueCitra`
-- `TrueRevati`
-- `TruePushya`
-- `GalacticCenterGilBrand`
-- `GalacticEquatorIAU1958`
-- `GalacticEquator`
-- `GalacticEquatorMidMula`
-- `Skydram`
-- `TrueMula`
-- `DhruvaGalCenterMulaWilhelm`
-- `Aryabhata522`
-- `BabylBritton`
-- `TrueSheoran`
-- `GalacticCenterCochrane`
-- `GalacticEquatorFiorenza`
-- `ValensMoon`
-- `Lahiri1940`
-- `LahiriVP285`
-- `KrishnamurtiVP291`
-- `LahiriICRC`
+## Constants
 
-Use the schema as the authoritative list when presenting a selection to users.
+### `Ayanamsa`
+
+```ts
+const Ayanamsa: Schema.Literals<readonly ["FaganBradley", "Lahiri", "DeLuce", "Raman", "Ushashashi", "Krishnamurti", "DjwhalKhul", "Yukteshwar", "JNBhasin", "BabylKugler1", "BabylKugler2", "BabylKugler3", "BabylHuber", "BabylEtPSC", "Aldebaran15Tau", "Hipparchos", "Sassanian", "GalacticCenter0Sag", "J2000", "J1900", "B1950", "SuryaSiddhanta", "SuryaSiddhantaMeanSun", "Aryabhata", "AryabhataMeanSun", "SSRevati", "SSCitra", "TrueCitra", "TrueRevati", "TruePushya", "GalacticCenterGilBrand", "GalacticEquatorIAU1958", "GalacticEquator", "GalacticEquatorMidMula", "Skydram", "TrueMula", "DhruvaGalCenterMulaWilhelm", "Aryabhata522", "BabylBritton", "TrueSheoran", "GalacticCenterCochrane", "GalacticEquatorFiorenza", "ValensMoon", "Lahiri1940", "LahiriVP285", "KrishnamurtiVP291", "LahiriICRC"]>
+```
+
+### `DefaultAstroParams`
+
+```ts
+declare const DefaultAstroParams: Layer.Layer<Service, never, never>
+```
+
+### `HouseSystem`
+
+```ts
+const HouseSystem: Schema.Literals<readonly ["Placidus", "Koch", "Porphyrius", "Regiomontanus", "Campanus", "Equal", "VehlowEqual", "WholeSign", "Meridian", "Azimuthal", "PolichPage", "Alcabitus", "Morinus"]>
+```

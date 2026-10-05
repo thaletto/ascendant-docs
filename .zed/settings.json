@@ -1,0 +1,33 @@
+{
+  "file_scan_exclusions": [
+    "**/.agents",
+    "**/.git",
+    "**/.github",
+    "**/.gitignore",
+    "**/.impeccable",
+    "**/.nitro",
+    "**/.npmrc",
+    "**/.output",
+    "**/.source",
+    "**/.tanstack",
+    "**/.vercel",
+    "**/.vscode",
+    "**/.zed",
+    "**/.DS_Store",
+    "**/*.log",
+    "**/CODE_OF_CONDUCT.md",
+    "**/CONTRIBUTION.md",
+    "**/LICENSE",
+    "**/Makefile",
+    "**/README.md",
+    "**/dist",
+    "**/node_modules",
+    "**/bun.lock",
+    "**/components.json",
+    "**/package-lock.json",
+    "**/package.json",
+    "**/source.config.ts",
+    "**/tsconfig.json",
+    "**/vite.config.ts"
+  ]
+}

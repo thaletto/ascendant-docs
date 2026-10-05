@@ -3,129 +3,338 @@ title: Chart
 description: Chart generation and placement models for D1 and divisional charts.
 ---
 
-import { TypeTable } from 'fumadocs-ui/components/type-table';
+{/* Generated from astro-ascendant@4.0.1. Do not edit by hand. Run `make sync-api` to regenerate. */}
 
-The `Chart` namespace is the main entry point. It calculates shared sidereal
-placements once and projects them into D1 and requested divisional charts.
-`Chart.generate` also calculates house cusps and angles through the supplied
-ephemeris service.
-
-## Quick start
+Import from `astro-ascendant/chart`:
 
 ```ts
-import { AstroParams, Chart, Swisseph } from "astro-ascendant";
-import { DateTime, Effect, Layer } from "effect";
-
-const input = Chart.ChartParams.make({
-  moment: Chart.Moment.make({
-    date: DateTime.makeUnsafe("2000-01-01T12:00:00.000Z"),
-  }),
-  latitude: 12.9716,
-  longitude: 77.5946,
-  sex: "Male",
-});
-
-const program = Chart.generate(input, [9]).pipe(Effect.provide(runtimeLayer));
+import * as Chart from "astro-ascendant/chart";
 ```
 
 ## Functions
 
-### `generate(input, divisions)`
+### `generate`
 
-<TypeTable
-  type={{
-    input: {
-      description: 'LocatedMoment fields plus optional sex',
-      type: 'ChartParams',
-      required: true,
-    },
-    divisions: {
-      description: 'Requested divisional charts; D1 is always first, duplicates removed, sorted numerically',
-      type: 'Division[]',
-    },
-  }}
-/>
+```ts
+const generate: (input: ChartParams, divisions?: readonly (1 | 2 | 3 | 4 | 7 | 9 | 10 | 12 | 16 | 20 | 24 | 27 | 30 | 40 | 45 | 60)[] | undefined) => Effect.Effect<ChartCalculation, ChartCalculationError | import("./divisional-mapping/error.js").DivisionalMappingError | LocatedMomentValidationError | import("../utils/position.js").LongitudeError, AstroParams | Ephemeris>
+```
 
-`divisions` may contain `1, 2, 3, 4, 7, 9, 10, 12, 16, 20, 24, 27, 30, 40,
-45, 60`. D1 (`division: 1`) is always first. Duplicate requests are removed
-and the remaining divisions are sorted numerically.
+### `getDivisionalTarget`
 
-#### `ChartParams` fields
+```ts
+const getDivisionalTarget: (longitude: number, division: 1 | 2 | 3 | 4 | 7 | 9 | 10 | 12 | 16 | 20 | 24 | 27 | 30 | 40 | 45 | 60) => Effect.Effect<{
+    signIndex: number;
+    degree: number & import("effect/Brand").Brand<"Degree">;
+    longitude: number & import("effect/Brand").Brand<"Longitude">;
+}, DivisionalMappingError | import("../../utils/position.js").LongitudeError, never>
+```
 
-<TypeTable
-  type={{
-    moment: {
-      description: 'UTC moment of the chart',
-      type: 'Moment',
-      required: true,
-    },
-    latitude: {
-      description: 'Finite latitude from -90 through 90',
-      type: 'number',
-      required: true,
-    },
-    longitude: {
-      description: 'Finite longitude from -180 through 180',
-      type: 'number',
-      required: true,
-    },
-    sex: {
-      description: 'Copied to each projected chart; it has no inferred default',
-      type: '"Male" | "Female"',
-    },
-  }}
-/>
+### `project`
 
-Coordinates must be finite latitude values from `-90` through `90` and
-longitude values from `-180` through `180`. The optional `sex` value is
-`"Male"` or `"Female"` and is copied to each projected chart; it has no
-inferred default.
+```ts
+const project: (placements: Placements, divisions?: readonly (1 | 2 | 3 | 4 | 7 | 9 | 10 | 12 | 16 | 20 | 24 | 27 | 30 | 40 | 45 | 60)[] | undefined, sex?: "Female" | "Male" | undefined) => Effect.Effect<[Chart, ...Chart[]], ChartCalculationError, never>
+```
 
-### `project(placements, divisions, sex?)`
+## Classes
 
-<TypeTable
-  type={{
-    placements: {
-      description: 'Already calculated shared placements',
-      type: 'Placements',
-      required: true,
-    },
-    divisions: {
-      description: 'Requested divisional charts, beginning with D1',
-      type: 'Division[]',
-    },
-    sex: {
-      description: 'Copied to each projected chart',
-      type: '"Male" | "Female"',
-    },
-  }}
-/>
+### `Chart`
 
-Projects already calculated `Placements` without invoking an ephemeris
-service. It returns a non-empty tuple of `Chart` values beginning with D1.
-Use this when several chart views should share the same placement evidence.
+```ts
+class Chart extends Chart_base {
+}
+```
 
-## Core models
+### `ChartAngles`
 
-| Model              | Important fields                                                    |
-| ------------------ | ------------------------------------------------------------------- |
-| `Moment`           | UTC `date`                                                          |
-| `LocatedMoment`    | `moment`, finite `latitude`, finite `longitude`                     |
-| `ChartParams`      | `LocatedMoment` fields plus optional `sex`                          |
-| `Placements`       | source `lagna` and source planet positions                          |
-| `ChartCalculation` | `placements`, `charts`, and `astroParams`                           |
-| `Chart`            | `division`, cusp-aware `houses`, optional angles and significations |
-| `House`            | sign, cusp, lords, planets, and optional Lagna                      |
-| `Planet`           | longitude, degree, retrograde state, dignity, and sign              |
-| `Star`             | name, lord, and pada                                                |
-| `Sign`             | sign name and classical lord                                        |
+```ts
+class ChartAngles extends ChartAngles_base {
+}
+```
 
-`Chart` uses one-directional relationships: a house lists its planets, while a
-planet does not carry a back-reference to its house. To find a planet's house,
-scan the chart's houses.
+### `ChartCalculation`
 
-## Supported divisions
+```ts
+class ChartCalculation extends ChartCalculation_base {
+}
+```
 
-`Division` is the union `1 | 2 | 3 | 4 | 7 | 9 | 10 | 12 | 16 | 20 | 24 | 27 |
-30 | 40 | 45 | 60`. D1 is the Rashi chart; all other values identify supported
-divisional charts derived from the same `Placements`.
+### `ChartCalculationError`
+
+```ts
+class ChartCalculationError extends ChartCalculationError_base {
+}
+```
+
+### `DivisionalMappingError`
+
+```ts
+class DivisionalMappingError extends DivisionalMappingError_base {
+}
+```
+
+### `House`
+
+```ts
+class House extends House_base {
+}
+```
+
+### `HouseSignificators`
+
+```ts
+class HouseSignificators extends HouseSignificators_base {
+}
+```
+
+### `Lagna`
+
+```ts
+class Lagna extends Lagna_base {
+}
+```
+
+### `LocatedMoment`
+
+```ts
+class LocatedMoment extends LocatedMoment_base {
+}
+```
+
+### `LocatedMomentValidationError`
+
+```ts
+class LocatedMomentValidationError extends LocatedMomentValidationError_base {
+}
+```
+
+### `MissingPlacementError`
+
+```ts
+class MissingPlacementError extends MissingPlacementError_base {
+}
+```
+
+### `Moment`
+
+```ts
+class Moment extends Moment_base {
+}
+```
+
+### `Placements`
+
+```ts
+class Placements extends Placements_base {
+}
+```
+
+### `Planet`
+
+```ts
+class Planet extends Planet_base {
+}
+```
+
+### `PlanetSignification`
+
+```ts
+class PlanetSignification extends PlanetSignification_base {
+}
+```
+
+### `Sign`
+
+```ts
+class Sign extends Sign_base {
+}
+```
+
+### `SourceLagna`
+
+```ts
+class SourceLagna extends SourceLagna_base {
+}
+```
+
+### `SourcePlanet`
+
+```ts
+class SourcePlanet extends SourcePlanet_base {
+}
+```
+
+### `Star`
+
+```ts
+class Star extends Star_base {
+}
+```
+
+## Interfaces
+
+### `DivisionalTarget`
+
+```ts
+interface DivisionalTarget {
+    readonly signIndex: number;
+    readonly degree: Degree;
+    readonly longitude: Longitude;
+}
+```
+
+### `SourcePosition`
+
+```ts
+interface SourcePosition {
+    readonly longitude: Longitude;
+    readonly signIndex: number;
+    readonly degree: Degree;
+}
+```
+
+### `Subdivision`
+
+```ts
+interface Subdivision {
+    readonly partIndex: number;
+    readonly degree: number;
+}
+```
+
+## Constants
+
+### `CalculationCharts`
+
+```ts
+const CalculationCharts: Schema.NonEmptyArray<typeof Chart>
+```
+
+### `ChartHouses`
+
+```ts
+const ChartHouses: Schema.$Record<Schema.Literals<readonly [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]>, typeof House>
+```
+
+### `ChartParams`
+
+```ts
+const ChartParams: Schema.Struct<{
+    readonly moment: typeof Moment;
+    readonly latitude: Schema.Finite;
+    readonly longitude: Schema.Finite;
+    readonly sex: Schema.optionalKey<Schema.Literals<readonly ["Male", "Female"]>>;
+}>
+```
+
+### `CircleAngle`
+
+```ts
+const CircleAngle: Schema.brand<Schema.Finite, "CircleAngle">
+```
+
+### `Degree`
+
+```ts
+const Degree: Schema.brand<Schema.Finite, "Degree">
+```
+
+### `Division`
+
+```ts
+const Division: Schema.Literals<readonly [1, 2, 3, 4, 7, 9, 10, 12, 16, 20, 24, 27, 30, 40, 45, 60]>
+```
+
+### `HOUSE_SIGNIFICATIONS`
+
+```ts
+const HOUSE_SIGNIFICATIONS: {
+    readonly 1: readonly ["birth", "head", "physical body", "limbs", "physical features", "livelihood"];
+    readonly 2: readonly ["wealth", "food", "right eye", "face", "speech", "family", "property"];
+    readonly 3: readonly ["courage", "firmness", "right ear", "younger siblings", "heroism", "mental strength"];
+    readonly 4: readonly ["house", "home", "land", "mother", "vehicle", "happiness", "learning"];
+    readonly 5: readonly ["intellect", "children", "son", "belly", "traditional law", "virtuous acts"];
+    readonly 6: readonly ["debt", "wounds", "disease", "enemy", "sin", "fear", "humiliation"];
+    readonly 7: readonly ["desire", "love", "passion", "cohabitation", "partner", "public", "marriage"];
+    readonly 8: readonly ["life", "longevity", "mental pain", "defeat", "sorrow", "scandal", "death", "obstacle"];
+    readonly 9: readonly ["guru", "father", "worship", "virtue", "spiritual initiation", "fortune"];
+    readonly 10: readonly ["livelihood", "work", "commerce", "business", "rank", "honor", "occupation"];
+    readonly 11: readonly ["profit", "gain", "income", "receipt", "fulfillment", "elder siblings", "friends"];
+    readonly 12: readonly ["disappearance", "bondage", "loss", "bed", "poverty", "decline", "left eye", "leg"];
+}
+```
+
+### `Houses`
+
+```ts
+const Houses: Schema.Literals<readonly [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]>
+```
+
+### `LagnaName`
+
+```ts
+const LagnaName: Schema.Literal<"Lagna">
+```
+
+### `Longitude`
+
+```ts
+const Longitude: Schema.brand<Schema.Finite, "Longitude">
+```
+
+### `Pada`
+
+```ts
+const Pada: Schema.Literals<readonly [1, 2, 3, 4]>
+```
+
+### `PlanetDignity`
+
+```ts
+const PlanetDignity: Schema.Literals<readonly ["EXALTED", "MOOLA_TRIKONA", "OWN", "FRIEND", "NEUTRAL", "ENEMY", "DEBILITATED"]>
+```
+
+### `Planets`
+
+```ts
+const Planets: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"]>
+```
+
+### `PlanetsLagna`
+
+```ts
+const PlanetsLagna: Schema.Union<readonly [Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"]>, Schema.Literal<"Lagna">]>
+```
+
+### `Provenance`
+
+```ts
+const Provenance: Schema.Struct<{
+    readonly school: Schema.Literal<"Ascendant">;
+    readonly method: Schema.Literal<"ascendant-divisional-mapping">;
+    readonly version: Schema.Literal<1>;
+}>
+```
+
+### `RashiLords`
+
+```ts
+const RashiLords: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"]>
+```
+
+### `Rashis`
+
+```ts
+const Rashis: Schema.Literals<readonly ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]>
+```
+
+### `Sex`
+
+```ts
+const Sex: Schema.Literals<readonly ["Male", "Female"]>
+```
+
+### `Stars`
+
+```ts
+const Stars: Schema.Literals<readonly ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"]>
+```
