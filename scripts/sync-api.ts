@@ -204,7 +204,8 @@ const DECL_RE =
   /^export\s+(?:declare\s+)?(?:(const|function|class|interface|type|enum|abstract\s+class)\s+([A-Za-z_$][\w$]*))/;
 const REEXPORT_STAR_RE = /^export\s*\*\s*from\s*["']([^"']+)["']/;
 const REEXPORT_NAMED_RE = /^export\s*(?:type\s+)?\{([^}]*)\}(?:\s*from\s*["']([^"']+)["'])?/;
-const LOCAL_DECL_RE = /^(?:declare\s+)?(const|function|class|interface|type|enum|abstract class)\s+([A-Za-z_$][\w$]*)/;
+const LOCAL_DECL_RE =
+  /^(?:declare\s+)?(const|function|class|interface|type|enum|abstract class)\s+([A-Za-z_$][\w$]*)/;
 
 function addSymbol(
   statement: string,
@@ -255,11 +256,7 @@ function parseNameList(list: string): Array<{ from: string; as: string }> {
     });
 }
 
-function parseDtsFile(
-  absPath: string,
-  out: Map<string, RawSymbol>,
-  seen: Set<string>,
-): void {
+function parseDtsFile(absPath: string, out: Map<string, RawSymbol>, seen: Set<string>): void {
   if (seen.has(absPath)) return;
   seen.add(absPath);
   const source = readFileSync(absPath, "utf8");
@@ -371,9 +368,7 @@ function collect(subpaths: string[]): Map<string, SymbolEntry[]> {
     }
   }
 
-  return new Map(
-    [...pages.entries()].map(([page, entries]) => [page, [...entries.values()]]),
-  );
+  return new Map([...pages.entries()].map(([page, entries]) => [page, [...entries.values()]]));
 }
 
 const BUCKET_ORDER: Bucket[] = ["Functions", "Classes", "Interfaces", "Types", "Constants"];
@@ -421,14 +416,19 @@ const metaPath = join(apiDir, "meta.json");
 const meta: { title: string; pages: string[] } = existsSync(metaPath)
   ? (JSON.parse(readFileSync(metaPath, "utf8")) as { title: string; pages: string[] })
   : { title: META_TITLE, pages: [] };
-const desiredMeta = JSON.stringify(
-  { title: META_TITLE, pages: orderedPages.filter((p) => pages.has(p) || meta.pages.includes(p)) },
-  null,
-  2,
-) + "\n";
+const desiredMeta =
+  JSON.stringify(
+    {
+      title: META_TITLE,
+      pages: orderedPages.filter((p) => pages.has(p) || meta.pages.includes(p)),
+    },
+    null,
+    2,
+  ) + "\n";
 
 let dirty: string[] = [];
-if (!existsSync(metaPath) || readFileSync(metaPath, "utf8") !== desiredMeta) dirty.push("meta.json");
+if (!existsSync(metaPath) || readFileSync(metaPath, "utf8") !== desiredMeta)
+  dirty.push("meta.json");
 for (const [page, symbols] of pages) {
   const outPath = join(apiDir, `${page}.mdx`);
   const content = renderPage(page, PAGES[page], firstSubpathFor(page), symbols);
@@ -450,6 +450,9 @@ if (checkOnly) {
   if (!existsSync(apiDir)) mkdirSync(apiDir, { recursive: true });
   writeFileSync(metaPath, desiredMeta);
   for (const [page, symbols] of pages)
-    writeFileSync(join(apiDir, `${page}.mdx`), renderPage(page, PAGES[page], firstSubpathFor(page), symbols));
+    writeFileSync(
+      join(apiDir, `${page}.mdx`),
+      renderPage(page, PAGES[page], firstSubpathFor(page), symbols),
+    );
   console.log(dirty.length > 0 ? `\nWrote: ${dirty.join(", ")}.` : "\nNo changes.");
 }

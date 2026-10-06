@@ -44,7 +44,7 @@ export function ChartNameField() {
       <Input
         id="chart-name"
         type="text"
-        placeholder="e.g. Priya"
+        placeholder="e.g. Harini"
         autoComplete="off"
         list="chart-saved-names"
         value={birth.name}
@@ -120,7 +120,7 @@ export function ChartDateField() {
         <InputGroupInput
           id="chart-date"
           value={text}
-          placeholder="1 Nov 2003"
+          placeholder="23 Jul 2003"
           autoComplete="off"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? "chart-date-error" : undefined}

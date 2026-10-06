@@ -23,8 +23,8 @@ function LandingPage() {
               </h1>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
                 Unlike the broad and vague magazine horoscopes that only use your{" "}
-                <span className="font-serif italic">sun sign</span>, we use a complete picture
-                of the sky when and where you were born to generate your full birth{" "}
+                <span className="font-serif italic">sun sign</span>, we use a complete picture of
+                the sky when and where you were born to generate your full birth{" "}
                 <span className="font-mono">chart</span>.
               </p>
               <div className="mt-6 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
@@ -56,7 +56,9 @@ function LandingPage() {
                 params={{ _splat: "skills" }}
                 className="group flex flex-wrap items-center gap-2 py-3.5"
               >
-                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">Skills</span>
+                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">
+                  Skills
+                </span>
                 <span
                   aria-hidden="true"
                   className="hidden shrink-0 text-sm text-muted-foreground sm:inline"
@@ -74,7 +76,9 @@ function LandingPage() {
                 params={{ _splat: "chart" }}
                 className="group flex flex-wrap items-center gap-2 py-3.5"
               >
-                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">Chart Generator</span>
+                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">
+                  Chart Generator
+                </span>
                 <span
                   aria-hidden="true"
                   className="hidden shrink-0 text-sm text-muted-foreground sm:inline"
@@ -92,7 +96,9 @@ function LandingPage() {
                 params={{ _splat: "api-reference/chart" }}
                 className="group flex flex-wrap items-center gap-2 py-3.5"
               >
-                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">API</span>
+                <span className="min-w-0 text-sm font-medium text-foreground sm:text-base">
+                  API
+                </span>
                 <span
                   aria-hidden="true"
                   className="hidden shrink-0 text-sm text-muted-foreground sm:inline"

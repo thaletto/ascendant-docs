@@ -79,7 +79,9 @@ function RootComponent() {
             />
             <span aria-hidden="true" className="banner-line" />
             <span className="pointer-events-none flex flex-1 items-center justify-center gap-2">
-              <span><span className="font-mono">astro-ascendant</span> 4.0 is here. Sidereal charts, dashas, and transits.</span>
+              <span>
+                <span className="font-mono">astro-ascendant</span> 4.0 is here
+              </span>
               <ArrowRightIcon size={16} className="banner-arrow shrink-0" />
             </span>
           </Banner>

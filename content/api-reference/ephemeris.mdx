@@ -16,15 +16,13 @@ import * as Ephemeris from "astro-ascendant/ephemeris";
 ### `Ephemeris`
 
 ```ts
-declare class Ephemeris extends Service_base {
-}
+declare class Ephemeris extends Service_base {}
 ```
 
 ### `EphemerisError`
 
 ```ts
-class EphemerisError extends EphemerisError_base {
-}
+class EphemerisError extends EphemerisError_base {}
 ```
 
 ## Interfaces
@@ -33,16 +31,16 @@ class EphemerisError extends EphemerisError_base {
 
 ```ts
 interface HouseData {
-    readonly cusps: readonly number[];
-    readonly ascendant: number;
-    readonly mc: number;
-    readonly armc: number;
-    readonly vertex: number;
-    readonly equatorialAscendant: number;
-    readonly coAscendant1: number;
-    readonly coAscendant2: number;
-    readonly polarAscendant: number;
-    readonly houseSystem: typeof HouseSystem.Type;
+  readonly cusps: readonly number[];
+  readonly ascendant: number;
+  readonly mc: number;
+  readonly armc: number;
+  readonly vertex: number;
+  readonly equatorialAscendant: number;
+  readonly coAscendant1: number;
+  readonly coAscendant2: number;
+  readonly polarAscendant: number;
+  readonly houseSystem: typeof HouseSystem.Type;
 }
 ```
 
@@ -50,13 +48,13 @@ interface HouseData {
 
 ```ts
 interface PlanetaryPosition {
-    readonly longitude: number;
-    readonly latitude: number;
-    readonly distance: number;
-    readonly longitudeSpeed: number;
-    readonly latitudeSpeed: number;
-    readonly distanceSpeed: number;
-    readonly flags: number;
+  readonly longitude: number;
+  readonly latitude: number;
+  readonly distance: number;
+  readonly longitudeSpeed: number;
+  readonly latitudeSpeed: number;
+  readonly distanceSpeed: number;
+  readonly flags: number;
 }
 ```
 
@@ -65,11 +63,13 @@ interface PlanetaryPosition {
 ### `CelestialBody`
 
 ```ts
-const CelestialBody: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "TrueNode", "MeanNode"]>
+const CelestialBody: Schema.Literals<
+  readonly ["Sun", "Moon", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "TrueNode", "MeanNode"]
+>;
 ```
 
 ### `JulianDay`
 
 ```ts
-const JulianDay: Schema.brand<Schema.Finite, "JulianDay">
+const JulianDay: Schema.brand<Schema.Finite, "JulianDay">;
 ```
