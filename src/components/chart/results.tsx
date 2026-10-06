@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useChart } from "@/components/chart/context";
-import { ChartAskClaudeButton, ChartSaveMarkdownButton } from "@/components/chart/actions";
+import { ChartAskChatGPTButton, ChartSavePdfButton } from "@/components/chart/actions";
 import { ChartSignHouseCharts } from "@/components/chart/sign-house-chart";
 import { ChartDashaTimelines } from "@/components/chart/dasha-timeline";
-import { ChartKpTable } from "@/components/chart/kp-table";
+import { ChartKpCaption, ChartKpTable } from "@/components/chart/kp-table";
+import { ChartKpCircularChart } from "@/components/chart/kp-circular-chart";
 import { signShortName } from "@/lib/chart";
 
 function ChartCalculating() {
@@ -210,13 +211,17 @@ function ChartSuccess() {
           <TabsTrigger value="kp">KP Chart</TabsTrigger>
           <TabsTrigger value="dasha">Dasha</TabsTrigger>
           <TabsTrigger value="jaimini">Jaimini</TabsTrigger>
-          <TabsTrigger value="sav">Sarvashtakavarga Table</TabsTrigger>
+          <TabsTrigger value="sav">SAV</TabsTrigger>
         </TabsList>
         <TabsContent value="chart">
           <ChartSignHouseCharts />
         </TabsContent>
         <TabsContent value="kp">
-          <ChartKpTable />
+          <div className="flex flex-col gap-4">
+            <ChartKpCaption />
+            <ChartKpCircularChart />
+            <ChartKpTable />
+          </div>
         </TabsContent>
         <TabsContent value="dasha">
           <ChartDashaTimelines />
@@ -229,9 +234,9 @@ function ChartSuccess() {
         </TabsContent>
       </Tabs>
       <Separator />
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <ChartAskClaudeButton />
-        <ChartSaveMarkdownButton />
+      <div className="flex flex-row gap-3">
+        <ChartAskChatGPTButton />
+        <ChartSavePdfButton />
       </div>
     </div>
   );

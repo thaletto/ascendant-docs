@@ -54,14 +54,17 @@ const clientLoader = browserCollections.docs.createClientLoader({
       path: string;
     },
   ) {
+    const isChartPage = path.replace(/\.mdx?$/, "") === "chart";
     return (
-      <DocsPage toc={toc}>
+      <DocsPage toc={toc} footer={{ enabled: !isChartPage }}>
         <DocsTitle>{frontmatter.title}</DocsTitle>
         <DocsDescription>{frontmatter.description}</DocsDescription>
-        <div className="flex flex-row gap-2 items-center border-b -mt-4 pb-6">
-          <MarkdownCopyButton markdownUrl={markdownUrl} />
-          <ViewOptionsPopover markdownUrl={markdownUrl} githubUrl={getGitHubUrl(path)} />
-        </div>
+        {!isChartPage ? (
+          <div className="flex flex-row gap-2 items-center border-b -mt-4 pb-6">
+            <MarkdownCopyButton markdownUrl={markdownUrl} />
+            <ViewOptionsPopover markdownUrl={markdownUrl} githubUrl={getGitHubUrl(path)} />
+          </div>
+        ) : null}
         <DocsBody>
           <MDX components={useMDXComponents()} />
         </DocsBody>

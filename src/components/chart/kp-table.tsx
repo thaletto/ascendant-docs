@@ -9,6 +9,21 @@ import {
 import { useChart } from "@/components/chart/context";
 import { formatSignifyingHouses } from "@/lib/chart";
 
+export function ChartKpCaption() {
+  const {
+    state: { result },
+  } = useChart();
+  if (!result) {
+    return null;
+  }
+  return (
+    <p className="text-muted-foreground m-0! text-sm">
+      Calculated with <span className="font-mono">{result.kp.astroParams.ayanamsa}</span> ayanamsa
+      and <span className="font-mono">{result.kp.astroParams.houseSystem}</span> houses.
+    </p>
+  );
+}
+
 export function ChartKpTable() {
   const {
     state: { result },
@@ -18,10 +33,6 @@ export function ChartKpTable() {
   }
   return (
     <div className="flex flex-col gap-1.5">
-      <p className="text-muted-foreground m-0! text-sm">
-        Calculated with {result.kp.astroParams.ayanamsa} ayanamsa and{" "}
-        {result.kp.astroParams.houseSystem} houses.
-      </p>
       <Table>
         <TableHeader>
           <TableRow>

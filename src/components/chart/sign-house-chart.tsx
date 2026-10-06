@@ -1,14 +1,16 @@
+import type { ReactNode } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   buildSouthIndianChart,
   SOUTH_INDIAN_GRID_TEMPLATE,
   type SouthIndianCell,
-  type SouthIndianChart,
+  type SouthIndianChart as SouthIndianChartData,
+  type SouthIndianOccupant,
 } from "@/lib/chart";
 import { useChart } from "@/components/chart/context";
 import { cn } from "@/lib/utils";
 
-function cellSpokenSummary(cell: SouthIndianCell): string {
+export function describeSouthIndianCell(cell: SouthIndianCell): string {
   const house = cell.house === null ? "" : `, house ${cell.house}`;
   if (cell.occupants.length === 0) {
     return `${cell.sign}${house}: empty`;
@@ -22,63 +24,16 @@ function cellSpokenSummary(cell: SouthIndianCell): string {
   return `${cell.sign}${house}: ${bodies}`;
 }
 
-function ChartBox({ cell }: { cell: SouthIndianCell }) {
-  return (
-    <div
-      style={{ gridArea: cell.area }}
-      className={cn(
-        "bg-background relative flex min-h-0 flex-col overflow-hidden px-1.5 py-1.5 sm:px-2 sm:py-2",
-        cell.isLagna && "bg-accent shadow-[inset_0_0_0_1.5px_var(--foreground)]",
-      )}
-    >
-      <div className="flex items-baseline justify-between gap-1">
-        <span
-          className={cn(
-            "text-[10px] tracking-[0.12em] uppercase",
-            cell.isLagna ? "text-foreground/70" : "text-muted-foreground",
-          )}
-        >
-          {cell.signShort}
-        </span>
-        {cell.house !== null ? (
-          <span
-            className={cn(
-              "font-mono text-[10px] tabular-nums",
-              cell.isLagna ? "text-foreground" : "text-muted-foreground",
-            )}
-          >
-            {cell.house}
-          </span>
-        ) : null}
-      </div>
-      <ul className="flex min-h-0 flex-1 flex-col justify-center gap-0.2">
-        {cell.occupants.map((occupant) => (
-          <li
-            key={`${occupant.body}-${occupant.degree}`}
-            className={cn(
-              "flex items-baseline justify-between gap-1 font-mono text-[11px] leading-tight sm:text-xs",
-              occupant.isLagna ? "font-medium" : "font-normal",
-            )}
-          >
-            <span>
-              {occupant.short}
-              {occupant.retrograde ? <span className="text-muted-foreground"> r</span> : null}
-            </span>
-            <span className="text-muted-foreground tabular-nums">{occupant.degree}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+export function describeSouthIndianChart(chart: SouthIndianChartData): string {
+  return `${chart.title} South Indian chart. Lagna ${chart.lagnaSign} ${chart.lagnaDegree}. ${chart.cells.map(describeSouthIndianCell).join(". ")}`;
 }
 
-function SouthIndianChartView({ chart }: { chart: SouthIndianChart }) {
-  const spoken = chart.cells.map(cellSpokenSummary).join(". ");
+function Root({ label, children }: { label: string; children: ReactNode }) {
   return (
     <figure className="flex flex-col gap-4">
       <div
         role="img"
-        aria-label={`${chart.title} South Indian chart. Lagna ${chart.lagnaSign} ${chart.lagnaDegree}. ${spoken}`}
+        aria-label={label}
         className="bg-foreground/25 mx-auto grid aspect-square w-full max-w-xl gap-px overflow-hidden border border-foreground/40"
         style={{
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
@@ -86,19 +41,110 @@ function SouthIndianChartView({ chart }: { chart: SouthIndianChart }) {
           gridTemplateAreas: SOUTH_INDIAN_GRID_TEMPLATE,
         }}
       >
-        {chart.cells.map((cell) => (
-          <ChartBox key={cell.sign} cell={cell} />
-        ))}
-        <div
-          style={{ gridArea: "center" }}
-          className="bg-background flex items-center justify-center px-3 text-center"
-        >
-          <span className="text-sm font-medium tracking-wide">{chart.title}</span>
-        </div>
+        {children}
       </div>
     </figure>
   );
 }
+
+function Cell({
+  area,
+  isLagna,
+  children,
+}: {
+  area: string;
+  isLagna: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      style={{ gridArea: area }}
+      className={cn(
+        "bg-background relative flex min-h-0 flex-col overflow-hidden px-1.5 py-1.5 sm:px-2 sm:py-2",
+        isLagna && "bg-accent shadow-[inset_0_0_0_1.5px_var(--foreground)]",
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Header({
+  signShort,
+  house,
+  isLagna,
+}: {
+  signShort: string;
+  house: number | null;
+  isLagna: boolean;
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-1">
+      <span
+        className={cn(
+          "text-[10px] tracking-[0.12em] uppercase",
+          isLagna ? "text-foreground/70" : "text-muted-foreground",
+        )}
+      >
+        {signShort}
+      </span>
+      {house !== null ? (
+        <span
+          className={cn(
+            "font-mono text-[10px] tabular-nums",
+            isLagna ? "text-foreground" : "text-muted-foreground",
+          )}
+        >
+          {house}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+function Body({ children }: { children: ReactNode }) {
+  return <ul className="flex min-h-0 flex-1 flex-col justify-center gap-0.2">{children}</ul>;
+}
+
+function Entry({ entry }: { entry: SouthIndianOccupant }) {
+  return (
+    <li
+      className={cn(
+        "flex items-baseline justify-between gap-1 font-mono text-[11px] leading-tight sm:text-xs",
+        entry.isLagna ? "font-medium" : "font-normal",
+      )}
+    >
+      <span>
+        {entry.short}
+        {entry.retrograde ? <span className="text-muted-foreground"> r</span> : null}
+      </span>
+      <span className="text-muted-foreground tabular-nums">{entry.degree}</span>
+    </li>
+  );
+}
+
+function Center({ title }: { title: string }) {
+  return (
+    <div
+      style={{ gridArea: "center" }}
+      className="bg-background flex items-center justify-center px-3 text-center"
+    >
+      <span className="text-sm font-medium tracking-wide">{title}</span>
+    </div>
+  );
+}
+
+/**
+ * Compound South Indian chart primitives. Callers compose Cell/Header/Body/
+ * Entry pieces instead of passing variant flags through a monolith.
+ */
+export const SouthIndianChart = Object.assign(Root, {
+  Cell,
+  Header,
+  Body,
+  Entry,
+  Center,
+});
 
 function SignHouseChart({ division }: { division: number }) {
   const {
@@ -114,7 +160,28 @@ function SignHouseChart({ division }: { division: number }) {
     return null;
   }
 
-  return <SouthIndianChartView chart={chart} />;
+  return (
+    <SouthIndianChart label={describeSouthIndianChart(chart)}>
+      {chart.cells.map((cell) => (
+        <SouthIndianChart.Cell key={cell.sign} area={cell.area} isLagna={cell.isLagna}>
+          <SouthIndianChart.Header
+            signShort={cell.signShort}
+            house={cell.house}
+            isLagna={cell.isLagna}
+          />
+          <SouthIndianChart.Body>
+            {cell.occupants.map((occupant) => (
+              <SouthIndianChart.Entry
+                key={`${occupant.body}-${occupant.degree}`}
+                entry={occupant}
+              />
+            ))}
+          </SouthIndianChart.Body>
+        </SouthIndianChart.Cell>
+      ))}
+      <SouthIndianChart.Center title={chart.title} />
+    </SouthIndianChart>
+  );
 }
 
 export function ChartSignHouseCharts() {

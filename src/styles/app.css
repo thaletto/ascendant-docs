@@ -327,12 +327,7 @@ body {
   bottom: 0;
   height: 1px;
   pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.9),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
   opacity: 0;
   transform: scaleX(0);
   transition:

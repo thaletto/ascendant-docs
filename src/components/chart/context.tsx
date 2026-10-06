@@ -1,7 +1,7 @@
 import { createContext, use, useRef, useState, type ReactNode } from "react";
+import { buildChartPdf } from "@/lib/chart-pdf";
 import {
-  buildChartMarkdown,
-  buildClaudePromptUrl,
+  buildChatGptPromptUrl,
   toUtcIso,
   validateChartInput,
   type ChartBirthInput,
@@ -38,8 +38,8 @@ export interface ChartPageActions {
   selectPlace: (option: PlaceOption) => void;
   applyProfile: (name: string) => void;
   calculate: () => void;
-  saveMarkdown: () => void;
-  askClaude: () => void;
+  savePdf: () => void;
+  askChatGPT: () => void;
 }
 
 export interface ChartContextValue {
@@ -299,28 +299,26 @@ export function ChartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const saveMarkdown = () => {
+  const savePdf = () => {
     if (!result) {
       return;
     }
-    const blob = new Blob([buildChartMarkdown(result)], {
-      type: "text/markdown",
-    });
+    const blob = buildChartPdf(result);
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "birth-chart.md";
+    anchor.download = "birth-chart.pdf";
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
   };
 
-  const askClaude = () => {
+  const askChatGPT = () => {
     if (!result) {
       return;
     }
-    window.open(buildClaudePromptUrl(result), "_blank", "noopener");
+    window.open(buildChatGptPromptUrl(result), "_blank", "noopener");
   };
 
   return (
@@ -343,8 +341,8 @@ export function ChartProvider({ children }: { children: ReactNode }) {
           selectPlace,
           applyProfile,
           calculate,
-          saveMarkdown,
-          askClaude,
+          savePdf,
+          askChatGPT,
         },
       }}
     >

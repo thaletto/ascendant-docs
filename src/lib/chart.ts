@@ -417,6 +417,160 @@ export function buildSouthIndianChart(
 }
 
 /**
+ * Sign-fixed South Indian chart of the KP house cusps: twelve rasi boxes
+ * stay in place and each house cusp sits in the sign containing it, shown
+ * as its house number with the cusp degree. Unequal houses mean a sign can
+ * hold several cusps or none.
+ */
+export function buildKpSouthIndianChart(result: ChartResult): SouthIndianChart | null {
+  if (result.kp.cusps.length === 0) {
+    return null;
+  }
+  const first = result.kp.cusps.find((cusp) => cusp.house === 1);
+  const lagnaSign = first?.sign ?? "";
+  const lagnaDegree = first === undefined ? "" : formatPlanetDegree(first.degree);
+  const d1 = result.divisions.find((entry) => entry.division === 1);
+
+  const cells = SOUTH_INDIAN_LAYOUT.map((slot) => {
+    const occupants: SouthIndianOccupant[] = [
+      ...result.kp.cusps
+        .filter((cusp) => cusp.sign === slot.sign)
+        .map((cusp) => ({
+          order: cusp.degree === "" ? Number.POSITIVE_INFINITY : parseDegreeStart(cusp.degree),
+          occupant: {
+            body: `House ${cusp.house} cusp`,
+            short: `H${cusp.house}`,
+            degree: cusp.degree === "" ? "—" : formatPlanetDegree(cusp.degree),
+            retrograde: false,
+            isLagna: cusp.house === 1,
+          },
+        })),
+      ...(d1?.placements
+        .filter((planet) => planet.sign === slot.sign)
+        .map((planet) => ({
+          order: parseDegreeStart(planet.degree),
+          occupant: {
+            body: planet.body,
+            short: bodyShortName(planet.body),
+            degree: formatPlanetDegree(planet.degree),
+            retrograde: planet.state === "Retrograde",
+            isLagna: false,
+          },
+        })) ?? []),
+    ]
+      .sort((a, b) => a.order - b.order)
+      .map((entry) => entry.occupant);
+
+    return {
+      sign: slot.sign,
+      area: slot.area,
+      signShort: signShortName(slot.sign),
+      house: null,
+      isLagna: slot.sign === lagnaSign,
+      occupants,
+    };
+  });
+
+  return {
+    division: 1,
+    title: "KP Cusps",
+    lagnaSign,
+    lagnaDegree,
+    cells,
+  };
+}
+
+export interface KpCircularCusp {
+  house: number;
+  sign: string;
+  degree: string;
+  longitude: number;
+}
+
+export interface KpCircularPlanet {
+  body: string;
+  short: string;
+  degree: string;
+  longitude: number;
+  retrograde: boolean;
+}
+
+export interface KpCircularChart {
+  ascendant: number;
+  lagnaSign: string;
+  lagnaDegree: string;
+  cusps: KpCircularCusp[];
+  planets: KpCircularPlanet[];
+}
+
+function absoluteLongitude(sign: string, degree: string): number | null {
+  const index = SIGN_ORDER.indexOf(sign);
+  const value = Number.parseFloat(degree);
+  if (index === -1 || !Number.isFinite(value)) {
+    return null;
+  }
+  return (index * 30 + value + 360) % 360;
+}
+
+/** Fixed zodiac frame: Aries 0° at the top, longitudes running counterclockwise. */
+export function fixedZodiacAngleFor(longitude: number): number {
+  return (((90 + longitude) % 360) + 360) % 360;
+}
+
+/** Midpoint from angle a to angle b in increasing-longitude direction. */
+export function circularMidAngle(a: number, b: number): number {
+  const delta = (((b - a) % 360) + 360) % 360;
+  return (a + delta / 2) % 360;
+}
+
+/**
+ * Circular KP wheel data: unequal Placidus house cusps as absolute sidereal
+ * longitudes plus D1 planet longitudes. Cusps or planets without a usable
+ * degree are skipped.
+ */
+export function buildKpCircularChart(result: ChartResult): KpCircularChart | null {
+  const cusps: KpCircularCusp[] = [];
+  for (const cusp of result.kp.cusps) {
+    const longitude = absoluteLongitude(cusp.sign, cusp.degree);
+    if (longitude === null) {
+      continue;
+    }
+    cusps.push({
+      house: cusp.house,
+      sign: cusp.sign,
+      degree: formatPlanetDegree(cusp.degree),
+      longitude,
+    });
+  }
+  if (cusps.length === 0) {
+    return null;
+  }
+  const first = cusps.find((cusp) => cusp.house === 1) ?? cusps[0];
+  const d1 = result.divisions.find((entry) => entry.division === 1);
+  const planets: KpCircularPlanet[] = [];
+  for (const planet of d1?.placements ?? []) {
+    const longitude = absoluteLongitude(planet.sign, planet.degree);
+    if (longitude === null) {
+      continue;
+    }
+    planets.push({
+      body: planet.body,
+      short: bodyShortName(planet.body),
+      degree: formatPlanetDegree(planet.degree),
+      longitude,
+      retrograde: planet.state === "Retrograde",
+    });
+  }
+  return {
+    ascendant: first?.longitude ?? 0,
+    lagnaSign: first?.sign ?? "",
+    lagnaDegree: first?.degree ?? "",
+    cusps,
+    planets,
+  };
+}
+
+/**
  * Rows for the sign/house chart: every house 1..12 in order, each with its
  * cusp starting degree and its occupants (RISING first in house 1, then
  * planets by longitude). Empty houses render a single blank row so all 12
@@ -767,7 +921,7 @@ function divisionChartMarkdown(result: ChartResult, division: number): string {
     [
       ["Lagna", lagna.sign, lagna.degree, "1"],
       ...match.placements.map((placement) => [
-        placement.body,
+        placement.state === "Retrograde" ? `${placement.body} (r)` : placement.body,
         placement.sign,
         placement.degree,
         String(placement.house),
@@ -803,11 +957,42 @@ function antardashaMarkdownTable(period: ChartDashaPeriod): string {
   );
 }
 
-export function buildClaudePromptUrl(result: ChartResult): string {
+export function buildChatGptPromptUrl(result: ChartResult): string {
   const currentIndex = findCurrentPeriodIndex(result.dasha.vimshottari);
   const currentMahadasha = currentIndex === -1 ? undefined : result.dasha.vimshottari[currentIndex];
+  const cuspSpans = result.kp.cusps
+    .flatMap((cusp) => {
+      const longitude = absoluteLongitude(cusp.sign, cusp.degree);
+      return longitude === null ? [] : [{ house: cusp.house, longitude }];
+    })
+    .sort((a, b) => a.longitude - b.longitude);
+  // KP house of a planet: the cusp span containing its sidereal longitude.
+  const houseOf = (body: string): string => {
+    const placement = (
+      result.divisions.find((entry) => entry.division === 1)?.placements ?? []
+    ).find((entry) => entry.body === body);
+    const longitude =
+      placement === undefined ? null : absoluteLongitude(placement.sign, placement.degree);
+    if (longitude === null || cuspSpans.length === 0) {
+      return "—";
+    }
+    for (let i = 0; i < cuspSpans.length; i += 1) {
+      const current = cuspSpans[i];
+      const next = cuspSpans[(i + 1) % cuspSpans.length];
+      if (current === undefined || next === undefined) {
+        continue;
+      }
+      const span = (((next.longitude - current.longitude) % 360) + 360) % 360 || 360;
+      const pos = (((longitude - current.longitude) % 360) + 360) % 360;
+      if (pos < span) {
+        return String(current.house);
+      }
+    }
+    return "—";
+  };
   const prompt = [
-    "/ascendant (install plugin thaletto/ascendant-agents)",
+    "Read the skill here: https://raw.githubusercontent.com/thaletto/ascendant-agents/refs/heads/main/skills/ascendant/SKILL.md",
+    "https://github.com/thaletto/ascendant-agents/tree/main/skills/ascendant/references",
     "",
     ...(result.birth.name.trim() !== "" ? [`Name: ${result.birth.name}`, ""] : []),
     "#D1",
@@ -818,9 +1003,10 @@ export function buildClaudePromptUrl(result: ChartResult): string {
     "",
     "#KP",
     markdownTable(
-      ["Body", "Sign Lord", "Star Lord", "Sub Lord", "Signifying Houses"],
+      ["Body", "House", "Sign Lord", "Star Lord", "Sub Lord", "Signifying Houses"],
       result.kp.rows.map((row) => [
         row.name,
+        houseOf(row.name),
         row.signLord,
         row.starLord,
         row.subLord,
@@ -848,5 +1034,5 @@ export function buildClaudePromptUrl(result: ChartResult): string {
     "#Antardasha",
     currentMahadasha ? antardashaMarkdownTable(currentMahadasha) : "_No current antardasha._",
   ].join("\n");
-  return `https://claude.ai/new?q=${encodeURIComponent(prompt)}`;
+  return `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`;
 }
