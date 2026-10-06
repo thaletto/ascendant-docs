@@ -3,7 +3,7 @@ title: Ephemeris
 description: Ephemeris service contract and runtime-neutral position models.
 ---
 
-{/* Generated from astro-ascendant@4.0.1. Do not edit by hand. Run `make sync-api` to regenerate. */}
+{/* Generated from astro-ascendant@4.0.4. Do not edit by hand. Run `make sync-api` to regenerate. */}
 
 Import from `astro-ascendant/ephemeris`:
 
@@ -16,13 +16,15 @@ import * as Ephemeris from "astro-ascendant/ephemeris";
 ### `Ephemeris`
 
 ```ts
-declare class Ephemeris extends Service_base {}
+declare class Ephemeris extends Service_base {
+}
 ```
 
 ### `EphemerisError`
 
 ```ts
-class EphemerisError extends EphemerisError_base {}
+class EphemerisError extends EphemerisError_base {
+}
 ```
 
 ## Interfaces
@@ -31,16 +33,16 @@ class EphemerisError extends EphemerisError_base {}
 
 ```ts
 interface HouseData {
-  readonly cusps: readonly number[];
-  readonly ascendant: number;
-  readonly mc: number;
-  readonly armc: number;
-  readonly vertex: number;
-  readonly equatorialAscendant: number;
-  readonly coAscendant1: number;
-  readonly coAscendant2: number;
-  readonly polarAscendant: number;
-  readonly houseSystem: typeof HouseSystem.Type;
+    readonly cusps: readonly number[];
+    readonly ascendant: number;
+    readonly mc: number;
+    readonly armc: number;
+    readonly vertex: number;
+    readonly equatorialAscendant: number;
+    readonly coAscendant1: number;
+    readonly coAscendant2: number;
+    readonly polarAscendant: number;
+    readonly houseSystem: typeof HouseSystem.Type;
 }
 ```
 
@@ -48,13 +50,13 @@ interface HouseData {
 
 ```ts
 interface PlanetaryPosition {
-  readonly longitude: number;
-  readonly latitude: number;
-  readonly distance: number;
-  readonly longitudeSpeed: number;
-  readonly latitudeSpeed: number;
-  readonly distanceSpeed: number;
-  readonly flags: number;
+    readonly longitude: number;
+    readonly latitude: number;
+    readonly distance: number;
+    readonly longitudeSpeed: number;
+    readonly latitudeSpeed: number;
+    readonly distanceSpeed: number;
+    readonly flags: number;
 }
 ```
 
@@ -63,13 +65,11 @@ interface PlanetaryPosition {
 ### `CelestialBody`
 
 ```ts
-const CelestialBody: Schema.Literals<
-  readonly ["Sun", "Moon", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "TrueNode", "MeanNode"]
->;
+const CelestialBody: Schema.Literals<readonly ["Sun", "Moon", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "TrueNode", "MeanNode"]>
 ```
 
 ### `JulianDay`
 
 ```ts
-const JulianDay: Schema.brand<Schema.Finite, "JulianDay">;
+const JulianDay: Schema.brand<Schema.Finite, "JulianDay">
 ```
