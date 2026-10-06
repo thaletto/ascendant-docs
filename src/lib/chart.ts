@@ -741,10 +741,16 @@ export function buildChartMarkdown(result: ChartResult): string {
   lines.push("", "## Chara Dasha", "");
   for (const period of result.dasha.chara) {
     lines.push(`- ${period.mahadasha}: ${period.start} to ${period.end}`);
+    for (const antar of period.antardashas) {
+      lines.push(`  - ${antar.antardasha}: ${antar.start} to ${antar.end}`);
+    }
   }
   lines.push("", "## Sthira Dasha", "");
   for (const period of result.dasha.sthira) {
     lines.push(`- ${period.mahadasha}: ${period.start} to ${period.end}`);
+    for (const antar of period.antardashas) {
+      lines.push(`  - ${antar.antardasha}: ${antar.start} to ${antar.end}`);
+    }
   }
   for (const division of result.divisions) {
     if (division.division === 1) {

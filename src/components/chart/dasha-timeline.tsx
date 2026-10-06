@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   findCurrentPeriodIndex,
@@ -25,10 +26,11 @@ function periodKey(period: ChartDashaPeriod): string {
   return `${period.mahadasha}-${period.start}`;
 }
 
-function AntardashaTable({ period }: { period: ChartDashaPeriod }) {
+function AntardashaTable({ period, now }: { period: ChartDashaPeriod; now: string }) {
   if (period.antardashas.length === 0) {
     return <p className="text-muted-foreground text-sm">No antardasha periods.</p>;
   }
+  const current = findCurrentPeriodIndex(period.antardashas, now);
   return (
     <Table className="text-xs">
       <TableHeader>
@@ -40,9 +42,17 @@ function AntardashaTable({ period }: { period: ChartDashaPeriod }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {period.antardashas.map((antar) => (
-          <TableRow key={`${antar.antardasha}-${antar.start}`}>
-            <TableCell className="px-2 py-1">{antar.antardasha}</TableCell>
+        {period.antardashas.map((antar, index) => (
+          <TableRow
+            key={`${antar.antardasha}-${antar.start}`}
+            className={index === current ? "bg-accent/60 font-medium" : ""}
+          >
+            <TableCell className="px-2 py-1">
+              <span className="inline-flex items-center gap-1.5">
+                {antar.antardasha}
+                {index === current ? <Badge variant="secondary">Current</Badge> : null}
+              </span>
+            </TableCell>
             <TableCell className="px-2 py-1">{formatDashaDate(antar.start)}</TableCell>
             <TableCell className="px-2 py-1">{formatDashaDate(antar.end)}</TableCell>
             <TableCell className="px-2 py-1">
@@ -72,25 +82,41 @@ function DashaSystemTable({ periods, now }: { periods: ChartDashaPeriod[]; now: 
         defaultValue={current === -1 ? [] : [periodKey(periods[current]!)]}
         className="border-0"
       >
-        {periods.map((period, index) => (
-          <AccordionItem key={periodKey(period)} value={periodKey(period)}>
-            <AccordionTrigger className="items-center gap-1 px-2 py-1 text-xs hover:no-underline **:data-[slot=accordion-trigger-icon]:size-3">
-              <span
-                className={`grid w-full grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2 pr-1 text-left font-normal ${
-                  index === current ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                <span className={index === current ? "font-medium" : ""}>{period.mahadasha}</span>
-                <span>{formatDashaDate(period.start)}</span>
-                <span>{formatDashaDate(period.end)}</span>
-                <span>{formatDashaDuration(period.start, period.end)}</span>
-              </span>
-            </AccordionTrigger>
-            <AccordionContent className="pb-2">
-              <AntardashaTable period={period} />
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+        {periods.map((period, index) => {
+          const currentAntarIndex =
+            index === current ? findCurrentPeriodIndex(period.antardashas, now) : -1;
+          const currentAntar =
+            currentAntarIndex === -1 ? undefined : period.antardashas[currentAntarIndex];
+          return (
+            <AccordionItem key={periodKey(period)} value={periodKey(period)}>
+              <AccordionTrigger className="items-center gap-1 px-2 py-1 text-xs hover:no-underline **:data-[slot=accordion-trigger-icon]:size-3">
+                <span
+                  className={`grid w-full grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2 pr-1 text-left font-normal ${
+                    index === current ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  <span className={index === current ? "font-medium" : ""}>
+                    <span className="inline-flex flex-wrap items-center gap-1.5">
+                      {period.mahadasha}
+                      {index === current ? <Badge variant="secondary">Current</Badge> : null}
+                    </span>
+                    {currentAntar ? (
+                      <span className="text-muted-foreground block text-[11px] font-normal">
+                        {currentAntar.antardasha} antardasha
+                      </span>
+                    ) : null}
+                  </span>
+                  <span>{formatDashaDate(period.start)}</span>
+                  <span>{formatDashaDate(period.end)}</span>
+                  <span>{formatDashaDuration(period.start, period.end)}</span>
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="pb-2">
+                <AntardashaTable period={period} now={now} />
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
       </Accordion>
     </div>
   );
