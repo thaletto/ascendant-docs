@@ -24,6 +24,45 @@ export function ChartKpCaption() {
   );
 }
 
+export function ChartKpCuspTable() {
+  const {
+    state: { result },
+  } = useChart();
+  if (!result || result.kp.cusps.length === 0) {
+    return null;
+  }
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>House</TableHead>
+            <TableHead>Sign</TableHead>
+            <TableHead>Cusp</TableHead>
+            <TableHead>Sign Lord</TableHead>
+            <TableHead>Star Lord</TableHead>
+            <TableHead>Sub Lord</TableHead>
+            <TableHead>Sub-Sub Lord</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {result.kp.cusps.map((cusp) => (
+            <TableRow key={cusp.house}>
+              <TableCell>{cusp.house}</TableCell>
+              <TableCell>{cusp.sign === "" ? "—" : cusp.sign}</TableCell>
+              <TableCell>{cusp.degree === "" ? "—" : cusp.degree}</TableCell>
+              <TableCell>{cusp.signLord === "" ? "—" : cusp.signLord}</TableCell>
+              <TableCell>{cusp.starLord === "" ? "—" : cusp.starLord}</TableCell>
+              <TableCell>{cusp.subLord === "" ? "—" : cusp.subLord}</TableCell>
+              <TableCell>{cusp.subSubLord === "" ? "—" : cusp.subSubLord}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
 export function ChartKpTable() {
   const {
     state: { result },

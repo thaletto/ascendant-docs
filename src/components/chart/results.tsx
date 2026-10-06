@@ -16,7 +16,7 @@ import { useChart } from "@/components/chart/context";
 import { ChartAskChatGPTButton, ChartSavePdfButton } from "@/components/chart/actions";
 import { ChartSignHouseCharts } from "@/components/chart/sign-house-chart";
 import { ChartDashaTimelines } from "@/components/chart/dasha-timeline";
-import { ChartKpCaption, ChartKpTable } from "@/components/chart/kp-table";
+import { ChartKpCaption, ChartKpCuspTable, ChartKpTable } from "@/components/chart/kp-table";
 import { ChartKpCircularChart } from "@/components/chart/kp-circular-chart";
 import { signShortName } from "@/lib/chart";
 
@@ -221,6 +221,7 @@ function ChartSuccess() {
             <ChartKpCaption />
             <ChartKpCircularChart />
             <ChartKpTable />
+            <ChartKpCuspTable />
           </div>
         </TabsContent>
         <TabsContent value="dasha">
