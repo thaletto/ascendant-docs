@@ -35,7 +35,6 @@
     "fumadocs-ui": "npm:@fumadocs/base-ui@16.15.10",
     "geo-tz": "^8.1.8",
     "jspdf": "^4.2.1",
-    "jspdf-autotable": "^5.0.8",
     "react": "^19.3.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.3.0",
